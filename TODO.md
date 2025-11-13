@@ -1,0 +1,4 @@
+- [x] Confirm Election Portal project details (description, tech stack, live demo)
+- [ ] Capture Election Portal GitHub repository URL
+- [x] Add Election Portal entry to `src/components/sections/Projects.tsx`
+- [ ] Ensure referenced project image exists under `public/images`
