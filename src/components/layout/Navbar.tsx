@@ -29,12 +29,6 @@ const Navbar = () => {
     { name: 'Contact', hash: '#contact' },
   ];
 
-  const pageLinks = [
-    { name: 'Case Studies', path: '/case-studies' },
-    { name: 'Study Vault', path: '/study-material' },
-    { name: 'Blog', path: '/blogs' },
-  ];
-
   const scrollToHash = useCallback((hash: string) => {
     const targetElement = document.querySelector(hash);
     if (!targetElement) return;
