@@ -1,9 +1,12 @@
-import { useState, useEffect } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { FaBars, FaTimes } from 'react-icons/fa';
+import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const location = useLocation();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -18,55 +21,84 @@ const Navbar = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const navLinks = [
-    { name: 'Home', href: '#home' },
-    { name: 'About', href: '#about' },
-    { name: 'Skills', href: '#skills' },
-    { name: 'Experience', href: '#experience' },
-    { name: 'Projects', href: '#projects' },
-    { name: 'Contact', href: '#contact' },
+  const sectionLinks = [
+    { name: 'About', hash: '#about' },
+    { name: 'Skills', hash: '#skills' },
+    { name: 'Experience', hash: '#experience' },
+    { name: 'Projects', hash: '#projects' },
+    { name: 'Contact', hash: '#contact' },
   ];
-  
-  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
-    e.preventDefault();
-    const targetElement = document.querySelector(href);
-    if (targetElement) {
-      // Close mobile menu if open
+
+  const pageLinks = [
+    { name: 'Case Studies', path: '/case-studies' },
+    { name: 'Study Vault', path: '/study-material' },
+    { name: 'Blog', path: '/blogs' },
+  ];
+
+  const scrollToHash = useCallback((hash: string) => {
+    const targetElement = document.querySelector(hash);
+    if (!targetElement) return;
+    const navbarHeight = document.querySelector('nav')?.offsetHeight ?? 0;
+    const targetPosition = targetElement.getBoundingClientRect().top + window.scrollY - navbarHeight;
+    window.scrollTo({ top: targetPosition, behavior: 'smooth' });
+  }, []);
+
+  const handleSectionClick = useCallback(
+    (hash: string) => {
       setIsOpen(false);
-      
-      // Add a small delay for mobile menu to close
-      setTimeout(() => {
-        // Get the target's position with offset for the navbar
-        const navbarHeight = document.querySelector('nav')?.offsetHeight || 0;
-        const targetPosition = targetElement.getBoundingClientRect().top + window.scrollY - navbarHeight;
-        
-        // Smooth scroll to the target
-        window.scrollTo({
-          top: targetPosition,
-          behavior: 'smooth'
-        });
-      }, 100);
-    }
-  };
+      const onHome = location.pathname === '/' || location.pathname === '';
+      if (onHome) {
+        scrollToHash(hash);
+      } else {
+        navigate({ pathname: '/', hash });
+      }
+    },
+    [location.pathname, navigate, scrollToHash],
+  );
+
+  const sharedLinkClasses =
+    'font-mono text-white hover:text-cyber-blue transition-colors duration-300';
 
   return (
     <nav className={`fixed w-full z-50 transition-all duration-300 ${
       scrolled ? 'bg-cyber-dark/80 backdrop-blur-md py-2' : 'bg-transparent py-4'
     }`}>
       <div className="container mx-auto px-4 flex justify-center  items-center">
-        
-        {/* Desktop Navigation */}
-        <div className="hidden md:flex space-x-7">
-          {navLinks.map((link) => (
-            <a
+        <div className="hidden md:flex items-center space-x-7">
+          <NavLink
+            to="/"
+            className={({ isActive }) =>
+              `${sharedLinkClasses} ${isActive ? 'text-cyber-blue' : ''}`
+            }
+            onClick={() => setIsOpen(false)}
+            end
+          >
+            Home
+          </NavLink>
+
+          {sectionLinks.map((link) => (
+            <button
               key={link.name}
-              href={link.href}
-              className="font-mono text-white hover:text-cyber-blue transition-colors duration-300"
-              onClick={(e) => handleNavClick(e, link.href)}
+              type="button"
+              className={sharedLinkClasses}
+              onClick={() => handleSectionClick(link.hash)}
             >
               {link.name}
-            </a>
+            </button>
           ))}
+
+          {/* {pageLinks.map((link) => (
+            <NavLink
+              key={link.name}
+              to={link.path}
+              className={({ isActive }) =>
+                `${sharedLinkClasses} ${isActive ? 'text-cyber-blue' : ''}`
+              }
+              onClick={() => setIsOpen(false)}
+            >
+              {link.name}
+            </NavLink>
+          ))} */}
         </div>
 
         {/* Mobile Navigation Button */}
@@ -82,16 +114,35 @@ const Navbar = () => {
       {isOpen && (
         <div className="md:hidden bg-cyber-light border-t border-cyber-blue/30">
           <div className="container mx-auto px-4 py-4 flex flex-col space-y-4">
-            {navLinks.map((link) => (
-              <a
+            <Link
+              to="/"
+              className={sharedLinkClasses}
+              onClick={() => setIsOpen(false)}
+            >
+              Home
+            </Link>
+
+            {sectionLinks.map((link) => (
+              <button
                 key={link.name}
-                href={link.href}
-                className="font-mono text-white hover:text-cyber-blue transition-colors duration-300"
-                onClick={(e) => handleNavClick(e, link.href)}
+                type="button"
+                className={sharedLinkClasses}
+                onClick={() => handleSectionClick(link.hash)}
               >
                 {link.name}
-              </a>
+              </button>
             ))}
+
+            {/* {pageLinks.map((link) => (
+              <Link
+                key={link.name}
+                to={link.path}
+                className={sharedLinkClasses}
+                onClick={() => setIsOpen(false)}
+              >
+                {link.name}
+              </Link>
+            ))} */}
           </div>
         </div>
       )}

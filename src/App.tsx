@@ -1,23 +1,26 @@
-import './App.css'
-import Layout from './components/layout/Layout'
-import Hero from './components/sections/Hero'
-import About from './components/sections/About'
-import Skills from './components/sections/Skills'
-import Experience from './components/sections/Experience'
-import Projects from './components/sections/Projects'
-import Contact from './components/sections/Contact'
+import './App.css';
+import { Route, Routes } from 'react-router-dom';
+import Layout from './components/layout/Layout';
+import HomePage from './pages/HomePage';
+import BlogsPage from './pages/BlogsPage';
+import BlogDetailPage from './pages/BlogDetailPage';
+import CaseStudiesPage from './pages/CaseStudiesPage';
+import StudyMaterialPage from './pages/StudyMaterialPage';
+import NotFoundPage from './pages/NotFoundPage';
 
 function App() {
   return (
-    <Layout>
-      <Hero />
-      <About />
-      <Skills />
-      <Experience />
-      <Projects />
-      <Contact />
-    </Layout>
+    <Routes>
+      <Route element={<Layout />}>
+        <Route index element={<HomePage />} />
+        <Route path="blogs" element={<BlogsPage />} />
+        <Route path="blogs/:slug" element={<BlogDetailPage />} />
+        <Route path="case-studies" element={<CaseStudiesPage />} />
+        <Route path="study-material" element={<StudyMaterialPage />} />
+        <Route path="*" element={<NotFoundPage />} />
+      </Route>
+    </Routes>
   );
 }
 
-export default App
+export default App;

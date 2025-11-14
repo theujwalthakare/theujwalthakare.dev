@@ -5,16 +5,9 @@
   overflow: hidden;
   border-right: 0.15em solid #377a5d;
   white-space: nowrap;
-  margin: 0 auto;
-  letter-spacing: 0.15em;
-  animation: 
-    typing 3.5s steps(40, end),
-    blink-caret 0.75s step-end infinite;
-}
-
-@keyframes typing {
-  from { width: 0 }
-  to { width: 100% }
+  display: inline-block;
+  letter-spacing: 0.12em;
+  animation: blink-caret 0.75s step-end infinite;
 }
 
 @keyframes blink-caret {
