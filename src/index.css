@@ -70,4 +70,153 @@
     before:content-[''] before:absolute before:bottom-2 before:left-2 
     before:w-3 before:h-3 before:border-b-2 before:border-l-2 before:border-cyber-blue;
   }
+
+  .ai-orb-surface {
+    @apply relative isolate flex items-center justify-center rounded-full bg-orb-gradient shadow-neon-core ring-1 ring-neon-cyan/40 overflow-hidden;
+  }
+
+  .ai-orb-surface::after {
+    content: "";
+    @apply absolute inset-4 rounded-full bg-gradient-to-tr from-neon-cyan/40 via-transparent to-transparent opacity-70 blur-3xl;
+  }
+
+  .ai-orb-surface::before {
+    content: "";
+    @apply absolute inset-0 rounded-full border border-neon-cyan/30 blur-[1px];
+  }
+
+  .ai-orb-halo {
+    @apply absolute inset-[-12%] rounded-full border border-neon-cyan/20 shadow-neon-ring opacity-80;
+  }
+
+  .ai-orb-grid {
+    background-image: radial-gradient(circle at center, rgba(0, 224, 255, 0.2) 0%, transparent 55%),
+      conic-gradient(from 90deg at 50% 50%, rgba(0, 180, 255, 0.18) 0%, rgba(0, 180, 255, 0.02) 25%, transparent 60%);
+    background-size: 100% 100%, 100% 100%;
+    mix-blend-mode: screen;
+  }
+
+  .orb-aura {
+    position: absolute;
+    inset: -12%;
+    border-radius: 9999px;
+    pointer-events: none;
+    mix-blend-mode: screen;
+    filter: blur(12px);
+  }
+
+  .orb-ring {
+    position: absolute;
+    inset: -8%;
+    border-radius: 9999px;
+    pointer-events: none;
+    mix-blend-mode: screen;
+  }
+
+  .orb-particle {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    border-radius: 9999px;
+    pointer-events: none;
+    mix-blend-mode: screen;
+    filter: blur(1.5px);
+  }
+
+  .orb-fluid-blob {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 44px;
+    height: 44px;
+    border-radius: 9999px;
+    pointer-events: none;
+    mix-blend-mode: screen;
+    filter: blur(4px);
+    transform: translate(-50%, -50%);
+  }
+
+  .orb-fluid {
+    position: absolute;
+    inset: 18%;
+    overflow: hidden;
+    border-radius: 46%;
+    border: 1px solid rgba(0, 224, 255, 0.4);
+    mix-blend-mode: screen;
+    background: radial-gradient(circle at 35% 20%, rgba(0, 224, 255, 0.28) 0%, rgba(0, 70, 120, 0.1) 45%, transparent 80%),
+      linear-gradient(140deg, rgba(0, 224, 255, 0.18) 0%, rgba(0, 36, 54, 0.32) 55%, rgba(0, 224, 255, 0.1) 100%);
+    backdrop-filter: blur(28px);
+  }
+
+  .orb-fluid-core {
+    position: absolute;
+    inset: -25%;
+    border-radius: 50%;
+    border: 1px solid rgba(0, 224, 255, 0.3);
+    background-image: radial-gradient(circle, rgba(0, 224, 255, 0.14) 0%, transparent 70%),
+      conic-gradient(from 45deg, rgba(0, 180, 255, 0.22) 0%, rgba(0, 62, 96, 0.3) 35%, rgba(0, 224, 255, 0.24) 70%, rgba(0, 42, 80, 0.3) 100%);
+    background-size: 180% 180%, 220% 220%;
+    filter: blur(6px);
+  }
+
+  .orb-fluid-bubble {
+    pointer-events: none;
+    position: absolute;
+    width: 3rem;
+    height: 3rem;
+    border-radius: 999px;
+    opacity: 0;
+    mix-blend-mode: screen;
+    filter: blur(2px);
+  }
+
+  .orb-fluid-shard {
+    pointer-events: none;
+    position: absolute;
+    width: 3px;
+    height: 4rem;
+    border-radius: 999px;
+    opacity: 0.12;
+    mix-blend-mode: screen;
+    filter: blur(1px);
+  }
+
+  .orb-fluid-fog {
+    pointer-events: none;
+    position: absolute;
+    inset: 0;
+    mix-blend-mode: screen;
+  }
+
+  .orb-fluid-crackle {
+    pointer-events: none;
+    position: absolute;
+    inset: 18%;
+    border-radius: 50%;
+    border: 1px solid rgba(255, 59, 111, 0.35);
+    box-shadow: 0 0 26px rgba(255, 59, 111, 0.55);
+  }
+
+  .glass-panel {
+    @apply relative overflow-hidden rounded-3xl border border-white/10 bg-white/5 backdrop-blur-xl shadow-[0_20px_60px_rgba(0,0,0,0.45)];
+  }
+
+  .glass-panel::before {
+    content: "";
+    @apply absolute left-10 top-0 h-full w-48 bg-gradient-to-b from-white/25 via-white/5 to-transparent opacity-70 rotate-[12deg];
+  }
+
+  .neon-chip {
+    @apply inline-flex items-center gap-2 rounded-full border border-neon-cyan/40 bg-white/5 px-3 py-1 text-[11px] uppercase tracking-[0.2em] text-neon-cyan/80;
+  }
+}
+
+@layer utilities {
+  .orb-sonar-ring {
+    @apply absolute inset-0 rounded-full border border-neon-cyan/40;
+  }
+
+  .orb-wave-bar {
+    @apply h-16 w-[3px] rounded-full bg-neon-cyan/70;
+  }
 }

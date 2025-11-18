@@ -4,6 +4,7 @@ export type AgentActionType =
   | 'highlight'
   | 'open_modal'
   | 'search'
+  | 'external_search'
   | 'none';
 
 export type AgentAction = {
@@ -42,7 +43,7 @@ export const parseAgentResponse = (raw: string): ParseResult => {
       return { ok: false, error: 'Invalid action field.' };
     }
 
-    if (!['respond', 'navigate', 'highlight', 'open_modal', 'search', 'none'].includes(action)) {
+    if (!['respond', 'navigate', 'highlight', 'open_modal', 'search', 'external_search', 'none'].includes(action)) {
       return { ok: false, error: `Unsupported action: ${action}` };
     }
 

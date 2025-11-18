@@ -1,6 +1,5 @@
 import { FaChevronDown } from 'react-icons/fa';
 import { useEffect, useRef, useState } from 'react';
-import { Link } from 'react-router-dom';
 import GuideOrbAssistant from '../ui/GuideOrbAssistant';
 
 const HERO_TYPING_PHRASES = ['Fullstack Developer', 'Cyber Security Enthusiast'];
@@ -153,7 +152,7 @@ const Hero = () => {
             <a href="#about" className="cyber-button">
               Explore My Work
             </a>
-
+{/* 
             <div className="mt-10 flex flex-col items-center gap-2 sm:grid sm:grid-cols-3 sm:gap-3 sm:items-stretch">
               <Link
                 to="/blogs"
@@ -173,10 +172,10 @@ const Hero = () => {
               >
                 Study Vault <span className="hidden text-[0.6rem] tracking-[0.3em] text-gray-400 sm:inline">/Resources</span>
               </Link>
-            </div>
+            </div> */}
           </div>
 
-          <div className="flex w-full max-w-[360px] flex-col items-center lg:mx-auto lg:max-w-[560px]">
+          <div className="flex w-full max-w-[460px] flex-col items-center lg:mx-auto lg:max-w-[560px]">
             <GuideOrbAssistant className="w-full justify-center" orbClassName="w-full max-w-[420px] sm:max-w-[520px] lg:max-w-[640px]" />
           </div>
         </div>

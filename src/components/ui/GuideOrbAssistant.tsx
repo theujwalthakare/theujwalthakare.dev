@@ -1,7 +1,9 @@
 // GuideOrbAssistant.tsx
-import { useCallback, useEffect, useRef, useState, type KeyboardEvent } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import GuideOrb from './GuideOrb';
+import { fetchExternalAnswer } from '../../services/externalSearch';
+import { NeonAIInteractionView, type NeonAIController, type VoiceState } from './NeonAIInteraction';
+import breathSfx from './sfx/breath-1.mp3';
 /**
  * Drop-in GuideOrbAssistant
  * - First-time handshake: asks for name and optionally persists locally (localStorage)
@@ -24,15 +26,162 @@ type AssistantMode =
 type ResponsePayload = {
   caption: string;
   speech: string;
-  action?: 'respond' | 'navigate' | 'highlight' | 'open_modal' | 'search' | 'none';
+  action?: 'respond' | 'navigate' | 'highlight' | 'open_modal' | 'search' | 'external_search' | 'none';
   target?: string;
   confidence?: number;
+  meta?: Record<string, unknown>;
 };
 
 const STORAGE_KEY = 'guideorb:v1';
 const NAME_TTL_MS = 1000 * 60 * 60 * 24 * 365; // 1 year
 
 const PREFERRED_VOICES = [/wavenet|neural|google|microsoft/i];
+
+const MODE_TO_VOICE_STATE: Record<AssistantMode, VoiceState> = {
+  greeting: 'speaking',
+  idle: 'idle',
+  listening: 'listening',
+  processing: 'thinking',
+  navigation: 'thinking',
+  smalltalk: 'speaking',
+  knowledgeLookup: 'thinking',
+  error: 'error',
+};
+
+const AMPLITUDE_TARGETS: Record<VoiceState, number> = {
+  idle: 0.18,
+  listening: 0.45,
+  thinking: 0.36,
+  speaking: 0.72,
+  error: 0.28,
+};
+
+const VOICE_STATE_TO_MODE: Record<VoiceState, AssistantMode> = {
+  idle: 'idle',
+  listening: 'listening',
+  thinking: 'processing',
+  speaking: 'smalltalk',
+  error: 'error',
+};
+
+const VOICE_STATE_OVERLAY: Record<VoiceState, string> = {
+  idle: 'Tap the orb to talk.',
+  listening: 'Listening — speak now.',
+  thinking: 'Processing your request...',
+  speaking: 'Responding with details.',
+  error: 'Voice not supported in this browser.',
+};
+
+const MODE_STATUS_TEXT: Record<AssistantMode, string> = {
+  greeting: 'Greeting…',
+  idle: 'Standing by for your next question.',
+  listening: 'Listening for your voice.',
+  processing: 'Processing your request…',
+  navigation: 'Routing to the requested section…',
+  smalltalk: 'Sharing a quick note.',
+  knowledgeLookup: 'Searching trusted sources…',
+  error: 'Something went wrong. Tap to retry.',
+};
+
+const SITE_FACTS: { pattern: RegExp; caption: string; speech: string }[] = [
+  {
+    pattern: /(this (site|website)|your (site|portfolio)|theujwal|ujwal.?thakare\.dev|guide orb)/i,
+    caption: 'This portfolio belongs to Ujwal Thakare — a security-first engineering leader.',
+    speech:
+      'This site is Ujwal Thakare’s portfolio, showcasing his security-first engineering leadership, delivery systems, and the Guide Orb assistant you are using right now.',
+  },
+  {
+    pattern: /(blog|blogs page|knowledge dispatch)/i,
+    caption: 'The Blogs page curates strategy dossiers with neon cards and tag filters.',
+    speech:
+      'The Blogs section curates strategy dossiers, featuring a highlighted dispatch, neon knowledge cards, and a subject navigator driven by tag filters.',
+  },
+  {
+    pattern: /(projects page|projects section)/i,
+    caption: 'Projects highlights applied case studies with cyber-themed visuals.',
+    speech:
+      'Projects showcases applied case studies, each cyber-themed card linking to deeper dives on resilience, automation, and AI workflows.',
+  },
+  {
+    pattern: /(experience page|experience section)/i,
+    caption: 'Experience maps Ujwal’s leadership roles across security and engineering.',
+    speech:
+      'The Experience section maps Ujwal’s leadership roles across security, DevOps, and engineering programs with timeline callouts.',
+  },
+  {
+    pattern: /(contact page|contact section|reach you|connect with you)/i,
+    caption: 'Use the Contact module to send a note via the EmailJS-powered form.',
+    speech: 'Use the Contact module or social links to send a note through the built-in EmailJS form.',
+  },
+];
+
+const maybeResolveSiteQuestion = (query: string): ResponsePayload | null => {
+  for (const fact of SITE_FACTS) {
+    if (fact.pattern.test(query)) {
+      return {
+        caption: fact.caption,
+        speech: fact.speech,
+        action: 'respond',
+        confidence: 0.82,
+      };
+    }
+  }
+  return null;
+};
+
+const formatExternalSummary = (query: string, summary: string) => {
+  const normalized = summary.replace(/\s+/g, ' ').trim();
+  const sentences = normalized.split(/(?<=[.!?])\s+/).filter(Boolean);
+  const lowerQuery = query.toLowerCase();
+
+  if (/^who\s+(is|was)\b/.test(lowerQuery)) {
+    const identity = sentences[0] ?? normalized;
+    const knownFor =
+      sentences.find((s) =>
+        /known|captain|leader|founder|actor|player|engineer|scientist|author|entrepreneur|politician|artist|coach|developer|security|cricket|football|technology|research|innovator/i.test(
+          s,
+        ),
+      ) || sentences[1] || identity;
+    const highlight =
+      sentences.find((s) =>
+        /award|record|title|champion|won|achievement|milestone|trophy|medal|world cup|notable|founded|launched|breakthrough|century|lead|innovated|captained/i.test(
+          s,
+        ),
+      ) || sentences[2] || knownFor;
+
+    const clean = (value: string) => value.replace(/\s+/g, ' ').replace(/[\.;]+$/, '');
+    return `Identity: ${clean(identity)}. Known for: ${clean(knownFor)}. Notable highlight: ${clean(highlight)}.`;
+  }
+
+  const first = sentences[0] ?? normalized;
+  return first.length > 140 ? `${first.slice(0, 137)}...` : first;
+};
+
+const useOrbAmplitude = (voiceState: VoiceState) => {
+  const [amplitude, setAmplitude] = useState(AMPLITUDE_TARGETS[voiceState]);
+  const jitterPhase = useMemo(() => Math.random() * Math.PI * 2, []);
+
+  useEffect(() => {
+    let frame: number;
+
+    const animate = () => {
+      const now = performance.now() * 0.002;
+      const jitter = Math.sin(now + jitterPhase) * 0.08;
+      const target = AMPLITUDE_TARGETS[voiceState] + jitter;
+      setAmplitude((prev) => {
+        const next = prev + (target - prev) * 0.12;
+        return Math.min(1, Math.max(0, next));
+      });
+      frame = requestAnimationFrame(animate);
+    };
+
+    animate();
+
+    return () => cancelAnimationFrame(frame);
+  }, [voiceState, jitterPhase]);
+
+  return amplitude;
+};
 
 export default function GuideOrbAssistant({
   className = '',
@@ -51,14 +200,16 @@ export default function GuideOrbAssistant({
   const [conversationHistory, setConversationHistory] = useState<
     { id: string; role: 'user' | 'assistant'; text: string; time: number }[]
   >([]);
-  const [isTranscriptOpen, setIsTranscriptOpen] = useState(true);
+  const [isSpeechSupported, setIsSpeechSupported] = useState(true);
 
   // refs
   const recognitionRef = useRef<any>(null);
   const synthRef = useRef<SpeechSynthesis | null>(null);
+  const breathAudioRef = useRef<HTMLAudioElement | null>(null);
   const voiceRef = useRef<SpeechSynthesisVoice | null>(null);
   const isMountedRef = useRef(false);
   const statusRef = useRef<AssistantMode>('idle');
+  // const speakingSessionRef = useRef(0);
 
   // storage helpers
   const loadStorage = useCallback(() => {
@@ -91,6 +242,17 @@ export default function GuideOrbAssistant({
     }
   });
 
+  const visualVoiceState = MODE_TO_VOICE_STATE[mode];
+  const amplitude = useOrbAmplitude(visualVoiceState);
+  const transcriptPreview = useMemo(() => {
+    if (!conversationHistory.length) return overlayMessage;
+    const recent = conversationHistory
+      .slice(-4)
+      .map((entry) => `${entry.role === 'user' ? 'You' : 'Guide'}: ${entry.text}`)
+      .join('\n');
+    return recent || overlayMessage;
+  }, [conversationHistory, overlayMessage]);
+
   useEffect(() => {
     statusRef.current = mode;
     onStateChange?.({ mode, message: overlayMessage, ephemeral: true });
@@ -98,47 +260,45 @@ export default function GuideOrbAssistant({
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
-    const initialize = () => {
-      if (window.innerWidth < 640) {
-        setIsTranscriptOpen(false);
-      } else {
-        setIsTranscriptOpen(true);
-      }
-    };
-    initialize();
-    const handleResize = () => {
-      if (window.innerWidth >= 640) {
-        setIsTranscriptOpen(true);
-      }
-    };
-    window.addEventListener('resize', handleResize);
-    return () => {
-      window.removeEventListener('resize', handleResize);
-    };
+    setIsSpeechSupported('speechSynthesis' in window);
   }, []);
 
   // util: push conversation
   const pushConversation = useCallback((role: 'user' | 'assistant', text: string) => {
-    setConversationHistory((p) => [
-      ...p,
-      { id: `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`, role, text, time: Date.now() },
-    ]);
+    const entry = { id: `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`, role, text, time: Date.now() };
+    setConversationHistory((prev) => {
+      if (role === 'user') {
+        return [entry];
+      }
+      const base = prev.slice(-1);
+      return [...base, entry].slice(-2);
+    });
   }, []);
 
   // SPEAK NATURAL: chunking + optional breath
+ // SPEAK NATURAL: chunking + optional breath
+
   const speakNatural = useCallback(async (text: string) => {
     const synth = synthRef.current;
     if (!synth) return;
 
-    const breathUrl = '/sfx/breath-1.mp3';
+    // const sessionId = ++speakingSessionRef.current;
+
+    const breathAudio = (() => {
+      if (!breathAudioRef.current) {
+        breathAudioRef.current = new Audio(breathSfx);
+        breathAudioRef.current.volume = 0.11;
+      }
+      return breathAudioRef.current;
+    })();
     const maybeBreath = async (segment: string) => {
-      if (segment.length < 55) return;
+      if (segment.length < 55 ) return;
       try {
-        const a = new Audio(breathUrl);
-        a.volume = 0.05;
-        await a.play();
-        await new Promise((resolve) => setTimeout(resolve, 60));
-        a.pause();
+        breathAudio.pause();
+        breathAudio.currentTime = 0;
+        await breathAudio.play();
+        await new Promise((resolve) => setTimeout(resolve, 90));
+        breathAudio.pause();
       } catch {}
     };
 
@@ -146,26 +306,36 @@ export default function GuideOrbAssistant({
     const chunks = normalized.length > 0 ? normalized.match(/[^.!?]+[.!?]?/g) ?? [normalized] : [];
 
     synth.cancel();
+    await new Promise((resolve) => setTimeout(resolve, 20));
+    if (synth.paused) synth.resume();
+    if (!chunks.length) return;
     for (let i = 0; i < chunks.length; i++) {
+      // if (sessionId !== speakingSessionRef.current) break;
       const chunk = chunks[i]?.trim();
       if (!chunk) continue;
       if (i > 0) {
         await maybeBreath(chunk);
+        // if (sessionId !== speakingSessionRef.current) break;
       }
 
       await new Promise<void>((resolve) => {
         const utterance = new SpeechSynthesisUtterance(chunk);
-        const baseRate = 1.2;
-        utterance.rate = Math.min(1.35, baseRate + Math.sin(i * 0.6) * 0.05);
-        utterance.pitch = 0.98 + ((i % 2) === 0 ? 0.01 : -0.01);
-        utterance.volume = 0.94;
+        const baseRate = 1.06;
+        const swing = Math.sin(i * 0.45) * 0.035;
+        utterance.rate = Math.min(1.2, Math.max(1.02, baseRate + swing));
+        utterance.pitch = 1 + ((i % 2) === 0 ? 0.015 : -0.015);
+        utterance.volume = 0.92;
+        utterance.lang = voiceRef.current?.lang ?? 'en-US';
         if (voiceRef.current) utterance.voice = voiceRef.current;
         utterance.onend = () => resolve();
         utterance.onerror = () => resolve();
         synth.speak(utterance);
       });
 
-      await new Promise((resolve) => setTimeout(resolve, 8));
+      // if (sessionId !== speakingSessionRef.current) break;
+
+      await new Promise((resolve) => setTimeout(resolve, 12));
+      // if (sessionId !== speakingSessionRef.current) break;
     }
   }, []);
 
@@ -247,22 +417,46 @@ export default function GuideOrbAssistant({
   // WIKI fetch (cached)
   const wikiCacheKey = (q: string) => `wiki:${q.toLowerCase().slice(0, 64)}`;
   const fetchWikiSummary = useCallback(async (query: string) => {
+    const fetchSummaryForTitle = async (title: string) => {
+      const res = await fetch(`https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(title)}`);
+      if (!res.ok) return null;
+      const data = await res.json();
+      return data.extract ? String(data.extract) : null;
+    };
+
+    const searchFallbackTitle = async (search: string) => {
+      const searchUrl =
+        'https://en.wikipedia.org/w/api.php?action=query&list=search&format=json&origin=*' +
+        `&srsearch=${encodeURIComponent(search)}&srlimit=1`;
+      const res = await fetch(searchUrl);
+      if (!res.ok) return null;
+      const data = await res.json();
+      const title = data?.query?.search?.[0]?.title;
+      return typeof title === 'string' && title.trim().length ? title : null;
+    };
+
     try {
       const key = wikiCacheKey(query);
       const cached = localStorage.getItem(key);
       if (cached) {
         const parsed = JSON.parse(cached);
-        // treat cache as valid for 7 days
         if (Date.now() - parsed.ts < 1000 * 60 * 60 * 24 * 7) return parsed.summary;
       }
-      // Wikipedia REST summary endpoint
-      const url = `https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(query)}`;
-      const res = await fetch(url);
-      if (!res.ok) return null;
-      const data = await res.json();
-      const summary = data.extract || null;
-      if (summary) localStorage.setItem(key, JSON.stringify({ summary, ts: Date.now() }));
-      return summary;
+
+      const initial = await fetchSummaryForTitle(query);
+      if (initial) {
+        localStorage.setItem(key, JSON.stringify({ summary: initial, ts: Date.now() }));
+        return initial;
+      }
+
+      const fallbackTitle = await searchFallbackTitle(query);
+      if (!fallbackTitle) return null;
+
+      const fallbackSummary = await fetchSummaryForTitle(fallbackTitle);
+      if (fallbackSummary) {
+        localStorage.setItem(key, JSON.stringify({ summary: fallbackSummary, ts: Date.now(), resolvedTitle: fallbackTitle }));
+      }
+      return fallbackSummary;
     } catch {
       return null;
     }
@@ -304,12 +498,31 @@ export default function GuideOrbAssistant({
     }
 
     // knowledge: try wiki
+    const local = maybeResolveSiteQuestion(text.toLowerCase());
+    if (local) return local;
+
     emitState('knowledgeLookup', 'Looking that up...', true);
     const summary = await fetchWikiSummary(text);
     if (summary) {
       return { caption: summary.slice(0, 200) + (summary.length > 200 ? '...' : ''), speech: summary, action: 'respond', confidence: 0.7 };
     }
-    return { caption: "I’m not aware of that. Try rephrasing or ask something else.", speech: "I'm not aware of that. I couldn't find a quick summary.", action: 'respond', confidence: 0.2 };
+    emitState('knowledgeLookup', 'Searching trusted sources...', true);
+    const external = await fetchExternalAnswer(text);
+    if (external?.summary) {
+      const trimmed = external.summary.trim();
+      const concise = formatExternalSummary(text, trimmed);
+      return {
+        caption: concise,
+        speech: concise,
+        action: 'respond',
+        confidence: 0.55,
+        meta: {
+          provenance: external.source ?? 'external_search',
+        },
+      };
+    }
+
+    return { caption: 'I’m not aware of that. Try rephrasing or ask something else.', speech: "I'm not aware of that. I couldn't find a quick summary.", action: 'respond', confidence: 0.2 };
   }, [emitState, fetchWikiSummary, quickIntent, userName]);
 
   // ACTION handler
@@ -341,6 +554,8 @@ export default function GuideOrbAssistant({
   // handle recognized transcript
   const handleUserQuestion = useCallback(async (raw: string) => {
     if (!isMountedRef.current) return;
+    synthRef.current?.cancel?.();
+    // cancelSpeech();
     pushConversation('user', raw);
     emitState('processing', 'Processing your request...', true);
     const response = await resolveResponse(raw);
@@ -349,8 +564,8 @@ export default function GuideOrbAssistant({
     await speakNatural(response.speech);
     await handleAction(response);
     if (!isMountedRef.current) return;
-    emitState('idle', 'Tap the orb to talk.', true);
-  }, [emitState, handleAction, pushConversation, resolveResponse, speakNatural]);
+    emitState('idle', VOICE_STATE_OVERLAY.idle, true);
+  }, [ emitState, handleAction, pushConversation, resolveResponse, speakNatural]);
 
   // SpeechRecognition setup
   useEffect(() => {
@@ -435,17 +650,17 @@ export default function GuideOrbAssistant({
           if (/\b(yes|sure|yep|yeah|okay|ok|haa)\b/.test(resp)) {
             saveStorage({ name: extracted, savedAt: Date.now() }); 
             await speakNatural(`All set, ${extracted}. I will remember you here.`);
-            emitState('idle', `Welcome, ${extracted}.`);
+            emitState('idle', `Welcome, ${extracted}.`, true);
           } else {
-            await speakNatural(`No problem. I won't save your name.`);
-            emitState('idle', 'Okay — I will not remember your name.');
+            await speakNatural('No problem. I will not save your name.');
+            emitState('idle', VOICE_STATE_OVERLAY.idle, true);
           }
         };
 
         confirmRec.onerror = async () => {
           confirmRec.stop?.();
           await speakNatural("I couldn't hear that. I won't save your name for now.");
-          emitState('idle', 'Name not saved.');
+          emitState('idle', 'Name not saved.', true);
         };
 
         confirmRec.start();
@@ -454,7 +669,7 @@ export default function GuideOrbAssistant({
       oneRec.onerror = async () => {
         oneRec.stop?.();
         await speakNatural("I couldn't hear you. Try tapping the orb and telling me your name.");
-        emitState('idle', 'Tap to tell me your name.');
+        emitState('idle', 'Tap to tell me your name.', true);
       };
 
       oneRec.start();
@@ -467,12 +682,25 @@ export default function GuideOrbAssistant({
   const deactivateAssistant = useCallback(() => {
     recognitionRef.current?.stop?.();
     synthRef.current?.cancel?.();
-    emitState('idle', 'Tap the orb to talk.', true);
-  }, [emitState]);
+    emitState('idle', VOICE_STATE_OVERLAY.idle, true);
+  },[ emitState]);
+
+  const interruptAndListen = useCallback(() => {
+    synthRef.current?.cancel?.();
+    recognitionRef.current?.stop?.();
+    emitState('listening', VOICE_STATE_OVERLAY.listening, true);
+    setTimeout(() => {
+      try {
+        recognitionRef.current?.start?.();
+      } catch {
+        emitState('error', 'Microphone busy. Tap to retry.', true);
+      }
+    }, 120);
+  }, [ emitState]);
 
   const handleOrbToggle = useCallback(() => {
     if (mode !== 'idle') {
-      deactivateAssistant();
+      interruptAndListen();
       return;
     }
 
@@ -485,95 +713,89 @@ export default function GuideOrbAssistant({
       return;
     }
 
-    setMode('listening');
-    statusRef.current = 'listening';
-    setOverlayMessage('Listening — speak now.');
+    emitState('listening', VOICE_STATE_OVERLAY.listening, true);
     try {
       recognitionRef.current?.start?.();
     } catch {
       emitState('error', 'Microphone busy. Tap to retry.', true);
     }
-  }, [askForNameAndMaybeSave, deactivateAssistant, emitState, mode, speakNatural, userName]);
+  }, [askForNameAndMaybeSave, emitState, interruptAndListen, mode, speakNatural, userName]);
 
-  const handleKeyActivate = useCallback(
-    (e: KeyboardEvent<HTMLDivElement>) => {
-      if (e.key === 'Enter' || e.key === ' ') {
-        e.preventDefault();
-        handleOrbToggle();
-      }
-    },
-    [handleOrbToggle]
+  const startListening = useCallback(async () => {
+    if (mode === 'idle') {
+      handleOrbToggle();
+    }
+  }, [handleOrbToggle, mode]);
+
+  const stopListening = useCallback(() => {
+    if (mode !== 'idle') {
+      deactivateAssistant();
+    }
+  }, [deactivateAssistant, mode]);
+
+  const speakFromController = useCallback((text: string) => {
+    void speakNatural(text);
+  }, [speakNatural]);
+
+  const forceState = useCallback((state: VoiceState) => {
+    const targetMode = VOICE_STATE_TO_MODE[state];
+    const message = VOICE_STATE_OVERLAY[state];
+    emitState(targetMode, message, true);
+  }, [emitState]);
+
+  const controller = useMemo<NeonAIController>(() => ({
+    voiceState: visualVoiceState,
+    amplitude,
+    transcript: transcriptPreview,
+    isSupported: isSpeechSupported,
+    startListening,
+    stopListening,
+    speak: speakFromController,
+    forceState,
+  }), [visualVoiceState, amplitude, transcriptPreview, isSpeechSupported, startListening, stopListening, speakFromController, forceState]);
+
+  const viewClassName = useMemo(() => [orbClassName].filter(Boolean).join(' ').trim(), [orbClassName]);
+  const wrapperClassName = useMemo(
+    () => ['flex flex-col items-center gap-2 text-white', className].filter(Boolean).join(' ').trim(),
+    [className]
   );
-
-  // small UI helpers
-  const isActive = mode !== 'idle' && mode !== 'error';
+  const statusText = MODE_STATUS_TEXT[mode];
+  const statusTone =
+    mode === 'listening' || mode === 'processing' || mode === 'knowledgeLookup'
+      ? 'text-cyber-blue/80 animate-pulse'
+      : 'text-white/60';
 
   return (
-    <div className={`flex flex-col items-center gap-4 sm:flex-row sm:items-start sm:gap-6 ${className}`}>
-      <div
-        role="button"
-        tabIndex={0}
-        aria-label="Activate GuideOrb assistant"
-        aria-pressed={isActive}
-        onClick={handleOrbToggle}
-        onKeyDown={handleKeyActivate}
-        className={`relative flex w-full max-w-[420px] items-center justify-center rounded-full p-1 transition-all sm:justify-center sm:max-w-[320px] lg:max-w-[720px] xl:max-w-[880px] 2xl:max-w-[980px] ${
-          isActive ? 'shadow-[0_0_25px_rgba(0,240,255,0.35)]' : 'shadow-[0_0_12px_rgba(0,240,255,0.18)]'
-        }`}
-      >
-        <GuideOrb className={`pointer-events-none w-full ${orbClassName}`} isActive={isActive} />
-        {mode === 'listening' && (
-          <span className="absolute -bottom-4 flex items-center gap-2 rounded-full bg-gray-900/90 px-3 py-1 text-[10px] font-mono uppercase tracking-[0.3em] text-pink-400 sm:text-xs">
-            Listening
-            <span className="h-2 w-2 animate-pulse rounded-full bg-pink-400" />
-          </span>
-        )}
-      </div>
+    <div className={wrapperClassName}>
+      <NeonAIInteractionView
+        className={viewClassName}
+        controller={controller}
+        initialDisplayMode="globe"
+        showSidePanel={false}
+        showModeToggle={false}
+        showStateButtons={false}
+        showVoiceControls={false}
+        showTranscript={false}
+        headline="Guide AI Assistant"
+        kicker="Neon Command Relay"
+        description={overlayMessage}
+        onOrbActivate={handleOrbToggle}
+      />
 
-      <div className="flex w-full max-w-md flex-col gap-2 sm:max-w-[16rem]">
-        <div className="rounded-xl border border-cyber-blue/25 bg-[rgba(5,7,9,0.7)] px-3 py-3 text-xs shadow-[0_8px_24px_rgba(0,0,0,0.4)] backdrop-blur">
-          <div className="mb-1 text-[10px] font-mono uppercase tracking-[0.35em] text-gray-400">Assistant</div>
-          <div className="text-sm leading-relaxed text-white sm:text-xs">{overlayMessage}</div>
-        </div>
+      <div className={`mt-1 text-xs uppercase tracking-[0.35em] ${statusTone}`}>{statusText}</div>
 
-        {!isTranscriptOpen && (
-          <button
-            type="button"
-            onClick={() => setIsTranscriptOpen(true)}
-            className="sm:hidden rounded-full border border-cyber-blue/30 bg-black/60 px-4 py-2 text-xs font-mono uppercase tracking-[0.3em] text-cyber-blue shadow-[0_8px_20px_rgba(2,12,24,0.35)]"
-          >
-            Show Conversation
-          </button>
-        )}
-
-        {isTranscriptOpen && (
-          <div className="max-h-48 w-full overflow-y-auto rounded-xl border border-cyber-blue/15 bg-black/70 px-3 py-3 text-xs shadow-[0_12px_30px_rgba(2,12,24,0.45)] backdrop-blur">
-            <div className="mb-2 flex items-center justify-between">
-              <span className="text-[10px] font-mono uppercase tracking-[0.35em] text-gray-400">Recent</span>
-              <button
-                type="button"
-                onClick={() => setIsTranscriptOpen(false)}
-                className="sm:hidden text-[9px] uppercase tracking-[0.3em] text-cyber-blue"
-              >
-                Hide
-              </button>
+      <div className="w-full max-w-xs rounded-2xl border border-white/15 bg-white/5 p-3 text-[11px] uppercase tracking-[0.3em] text-white/60">
+        {conversationHistory.length === 0 ? (
+          <p className="text-center text-white/40">No transcript yet — ask anything.</p>
+        ) : (
+          conversationHistory.map((entry) => (
+            <div key={entry.id} className={`mb-3 last:mb-0 ${entry.role === 'assistant' ? 'text-cyber-green/80' : 'text-white/70'}`}>
+              <span className="block text-[9px] font-semibold tracking-[0.45em] text-white/40">
+                {entry.role === 'assistant' ? 'Guide' : 'You'}
+              </span>
+              <span className="block normal-case tracking-[0.02em] text-white/80">{entry.text}</span>
             </div>
-            {conversationHistory.length === 0 ? (
-              <div className="text-center text-[11px] text-gray-400 sm:text-left">
-                Conversation will appear here after you chat.
-              </div>
-            ) : (
-              conversationHistory
-                .slice(-6)
-                .reverse()
-                .map((item) => (
-                  <div key={item.id} className={`mb-2 last:mb-0 ${item.role === 'user' ? 'text-cyan-300' : 'text-pink-300'}`}>
-                    <div className="font-mono text-[9px] uppercase tracking-[0.25em] opacity-70">{item.role}</div>
-                    <div className="text-xs leading-relaxed">{item.text}</div>
-                  </div>
-                ))
-            )}
-          </div>
+          ))
         )}
       </div>
     </div>
