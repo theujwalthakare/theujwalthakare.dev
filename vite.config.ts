@@ -5,5 +5,5 @@ import react from '@vitejs/plugin-react'
 export default defineConfig({
   plugins: [react()],
   // Use a root-relative base so assets work on custom domains and GitHub Pages
-    base: "/"
+    base: "/theujwalthakare.dev/"
 })
