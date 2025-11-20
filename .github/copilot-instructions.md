@@ -27,4 +27,4 @@
 - Fonts load from `/sd-dystopian-font`; include corresponding `@font-face` updates if adding more custom fonts.
 - Keep accessibility affordances (role, `aria-*`, keyboard handlers) intact on interactive elements like the orb and navigation buttons.
 
-Let us know if any section needs deeper detail or if new patterns emerge that should be documented here."}
+Let us know if any section needs deeper detail or if new patterns emerge that should be documented here."
