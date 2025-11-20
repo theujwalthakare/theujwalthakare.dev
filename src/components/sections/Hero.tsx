@@ -1,6 +1,5 @@
 import { FaChevronDown } from 'react-icons/fa';
 import { useEffect, useRef, useState } from 'react';
-import GuideOrbAssistant from '../ui/GuideOrbAssistant';
 
 const HERO_TYPING_PHRASES = ['Fullstack Developer', 'Cyber Security Enthusiast'];
 
@@ -175,9 +174,7 @@ const Hero = () => {
             </div> */}
           </div>
 
-          <div className="flex w-full max-w-[460px] flex-col items-center lg:mx-auto lg:max-w-[560px]">
-            <GuideOrbAssistant className="w-full justify-center" orbClassName="w-full max-w-[420px] sm:max-w-[520px] lg:max-w-[640px]" />
-          </div>
+       
         </div>
       </div>
       
