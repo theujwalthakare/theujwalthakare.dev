@@ -1,191 +1,192 @@
-import { FaChevronDown } from 'react-icons/fa';
-import { useEffect, useRef, useState } from 'react';
-
-const HERO_TYPING_PHRASES = ['Fullstack Developer', 'Cyber Security Enthusiast'];
-
-const RotatingTyping = () => {
-  const [phraseIndex, setPhraseIndex] = useState(0);
-  const [subIndex, setSubIndex] = useState(0);
-  const [isDeleting, setIsDeleting] = useState(false);
-
-  useEffect(() => {
-    const currentPhrase = HERO_TYPING_PHRASES[phraseIndex];
-    let timeout: number;
-
-    if (!isDeleting && subIndex === currentPhrase.length) {
-      timeout = window.setTimeout(() => setIsDeleting(true), 1200);
-    } else if (isDeleting && subIndex === 0) {
-      timeout = window.setTimeout(() => {
-        setIsDeleting(false);
-        setPhraseIndex((phraseIndex + 1) % HERO_TYPING_PHRASES.length);
-      }, 300);
-    } else {
-      timeout = window.setTimeout(() => {
-        setSubIndex((prev) => prev + (isDeleting ? -1 : 1));
-      }, isDeleting ? 60 : 120);
-    }
-
-    return () => window.clearTimeout(timeout);
-  }, [phraseIndex, subIndex, isDeleting]);
-
-  return (
-    <span className="typing-text" aria-label={HERO_TYPING_PHRASES[phraseIndex]}>
-      {HERO_TYPING_PHRASES[phraseIndex].slice(0, subIndex)}
-    </span>
-  );
-};
+import { useEffect, useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { FaGithub, FaLinkedin, FaTwitter, FaTerminal, FaCode, FaNetworkWired } from 'react-icons/fa';
+import DecryptedText from '../ui/DecryptedText';
+import LoadingScreen from '../ui/LoadingScreen';
 
 const Hero = () => {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
+  // Fake Terminal Logs
+  const [logs, setLogs] = useState<string[]>([]);
   useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
-
-    // Set canvas to full screen
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-
-    // Characters to use in the rain
-    const chars = 'アァカサタナハマヤャラワガザダバパイィキシチニヒミリヰギジヂビピウゥクスツヌフムユュルグズブヅプエェケセテネヘメレヱゲゼデベペオォコソトノホモヨョロヲゴゾドボポヴッン0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ abcdefghijklmnopqrstuvwxyz !@#$%^&*()_+[]{}|;:,.<>?/~`';
-    const charArray = chars.split('');
-
-    // Font size and columns
-    const fontSize = 14;
-    const columns = Math.floor(canvas.width / fontSize);
-
-    // Array to track the y position of each drop
-    const drops: number[] = [];
-    for (let i = 0; i < columns; i++) {
-      drops[i] = Math.random() * -100;
-    }
-
-    // Drawing the characters
-    const draw = () => {
-      // Black background with opacity to create trail effect
-      ctx.fillStyle = 'rgba(10, 10, 15, 0.05)';
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-      // Set text color and font
-      ctx.fillStyle = '#00f0ff';
-      ctx.font = `${fontSize}px monospace`;
-
-      // Draw characters
-      for (let i = 0; i < drops.length; i++) {
-        // Random character
-        const text = charArray[Math.floor(Math.random() * charArray.length)];
-        
-        // x = i * fontSize, y = drops[i] * fontSize
-        ctx.fillText(text, i * fontSize, drops[i] * fontSize);
-
-        // Randomly reset some drops to the top
-        if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
-          drops[i] = 0;
-        }
-
-        // Move drop down
-        drops[i]++;
+    if (isLoading) return;
+    const bootLogs = [
+      '> CONNECTING TO MAINFRAME...',
+      '> AUTHENTICATING USER: VISITOR_01',
+      '> ACCESS GRANTED.',
+      '> LOADING PORTFOLIO ASSETS...',
+      '> EXECUTING WELCOME PROTOCOL...'
+    ];
+    let i = 0;
+    const interval = setInterval(() => {
+      if (i < bootLogs.length) {
+        setLogs(prev => [...prev, bootLogs[i]]);
+        i++;
+      } else {
+        clearInterval(interval);
       }
-    };
-
-    // Animation loop
-    const interval = setInterval(draw, 35);
-
-    // Handle window resize
-    const handleResize = () => {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-      
-      // Recalculate columns
-      const newColumns = Math.floor(canvas.width / fontSize);
-      
-      // Reset drops array
-      drops.length = 0;
-      for (let i = 0; i < newColumns; i++) {
-        drops[i] = Math.random() * -100;
-      }
-    };
-
-    window.addEventListener('resize', handleResize);
-
-    // Cleanup
-    return () => {
-      clearInterval(interval);
-      window.removeEventListener('resize', handleResize);
-    };
-  }, []);
+    }, 800);
+    return () => clearInterval(interval);
+  }, [isLoading]);
 
   return (
-    <section id="home" className="relative flex min-h-[120vh] items-center lg:h-screen">
-      {/* Matrix rain background */}
-      <div className="absolute inset-0 bg-cyber-dark z-0">
-        <canvas ref={canvasRef} className="w-full h-full opacity-30" />
-      </div>
-      
-      {/* Glowing lines */}
-      <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-cyber-dark via-cyber-blue to-cyber-dark"></div>
-      <div className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-cyber-dark via-cyber-pink to-cyber-dark"></div>
-      
-      <div className="container mx-auto px-4 z-10">
-        <div className="flex flex-col items-center gap-12 lg:grid lg:grid-cols-[minmax(0,1fr)_minmax(0,360px)] lg:items-center lg:gap-12">
-          <div className="max-w-3xl text-center lg:text-left">
-            <h1 className="text-2xl md:text-6xl font-dystopian text-white mb-4">
-              <span className="block">I'AM</span>
-              <span className="text-cyber-blue animate-glow">UJWAL THAKARE</span>
-            </h1>
+    <section id="home" className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
+      <AnimatePresence>
+        {isLoading && <LoadingScreen onComplete={() => setIsLoading(false)} />}
+      </AnimatePresence>
 
-            <div className="h-1 w-32 bg-cyber-pink mb-6"></div>
+      {!isLoading && (
+        <div className="container mx-auto px-4 grid grid-cols-1 lg:grid-cols-12 gap-6 h-full relative z-10">
 
-            <h2 className="mb-8 text-left text-xl font-mono text-gray-300 md:text-2xl">
-              <RotatingTyping />
-            </h2>
+          {/* LEFT COLUMN: IDENTITY MODULE */}
+          <motion.div
+            initial={{ opacity: 0, x: -50 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+            className="lg:col-span-4 flex flex-col gap-6"
+          >
+            <div className="glass-panel p-6 border-l-4 border-cyber-blue relative overflow-hidden group">
+              <div className="absolute top-0 right-0 p-2 opacity-50">
+                <FaNetworkWired className="text-cyber-blue text-2xl animate-pulse" />
+              </div>
+              <div className="relative z-10">
+                <div className="w-32 h-32 mx-auto mb-6 rounded-full border-2 border-cyber-blue/50 p-1 relative">
+                  <div className="absolute inset-0 rounded-full border border-dashed border-cyber-pink animate-spin-slow"></div>
+                  <img src="/images/profile.jpg" alt="Profile" className="rounded-full w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-500" />
+                </div>
+                <h1 className="text-4xl font-dystopian text-white text-center mb-2">
+                  <DecryptedText text="UJWAL THAKARE" />
+                </h1>
+                <div className="text-center font-mono text-cyber-blue/80 text-sm tracking-widest mb-6">
+                  FULL STACK OPERATIVE
+                </div>
+                <div className="flex justify-center gap-4">
+                  <SocialButton icon={FaGithub} href="https://github.com/theujwalthakare" delay={0.1} />
+                  <SocialButton icon={FaLinkedin} href="https://linkedin.com/in/theujwalthakare" delay={0.2} />
+                  <SocialButton icon={FaTwitter} href="https://twitter.com" delay={0.3} />
+                </div>
+              </div>
+            </div>
 
-            <p className="text-gray-400 mb-8 max-w-lg">
-              Building digital experiences with a focus on performance, security, and cutting-edge design.
-              Let's create something extraordinary together.
-            </p>
+            {/* Status Panel */}
+            <div className="glass-panel p-6 font-mono text-xs text-gray-400">
+              <div className="flex justify-between mb-2">
+                <span>AVAILABILITY</span>
+                <span className="text-green-400">● OPEN FOR WORK</span>
+              </div>
+              <div className="flex justify-between mb-2">
+                <span>LOCATION</span>
+                <span>PUNE, INDIA</span>
+              </div>
+              <div className="h-px bg-white/10 my-3"></div>
+              <div className="flex justify-between">
+                <span>LAST COMMIT</span>
+                <span>Today 14:02 UTC</span>
+              </div>
+            </div>
+          </motion.div>
 
-            <a href="#about" className="cyber-button">
-              Explore My Work
-            </a>
-{/* 
-            <div className="mt-10 flex flex-col items-center gap-2 sm:grid sm:grid-cols-3 sm:gap-3 sm:items-stretch">
-              <Link
-                to="/blogs"
-                className="flex w-full max-w-[240px] items-center justify-center gap-2 rounded border border-cyber-blue/40 bg-cyber-dark/70 px-3 py-2 text-center text-xs font-mono uppercase tracking-[0.08em] text-cyber-blue transition hover:border-cyber-blue/80 hover:bg-cyber-blue/10 sm:max-w-none sm:justify-between sm:text-left sm:px-4 sm:py-3 sm:text-sm sm:tracking-[0.2em]"
-              >
-                Blog Posts <span className="hidden text-[0.6rem] tracking-[0.3em] text-gray-400 sm:inline">/Latest</span>
-              </Link>
-              <Link
-                to="/case-studies"
-                className="flex w-full max-w-[240px] items-center justify-center gap-2 rounded border border-cyber-blue/40 bg-cyber-dark/70 px-3 py-2 text-center text-xs font-mono uppercase tracking-[0.08em] text-cyber-blue transition hover:border-cyber-blue/80 hover:bg-cyber-blue/10 sm:max-w-none sm:justify-between sm:text-left sm:px-4 sm:py-3 sm:text-sm sm:tracking-[0.3em]"
-              >
-                Case Studies <span className="hidden text-[0.6rem] tracking-[0.3em] text-gray-400 sm:inline">/Deep Dives</span>
-              </Link>
-              <Link
-                to="/study-material"
-                className="flex w-full max-w-[240px] items-center justify-center gap-2 rounded border border-cyber-blue/40 bg-cyber-dark/70 px-3 py-2 text-center text-xs font-mono uppercase tracking-[0.08em] text-cyber-blue transition hover:border-cyber-blue/80 hover:bg-cyber-blue/10 sm:max-w-none sm:justify-between sm:text-left sm:px-4 sm:py-3 sm:text-sm sm:tracking-[0.3em]"
-              >
-                Study Vault <span className="hidden text-[0.6rem] tracking-[0.3em] text-gray-400 sm:inline">/Resources</span>
-              </Link>
-            </div> */}
-          </div>
+          {/* CENTER COLUMN: MAIN INTERFACE */}
+          <motion.div
+            initial={{ opacity: 0, y: 50 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.4 }}
+            className="lg:col-span-8 flex flex-col justify-center gap-6"
+          >
+            <div className="glass-panel p-8 relative min-h-[400px] flex flex-col justify-between">
+              <div>
+                <div className="flex items-center gap-2 mb-6 opacity-60">
+                  <FaTerminal className="text-cyber-pink" />
+                  <span className="font-mono text-xs">TERMINAL_V1.0.4</span>
+                </div>
 
-       
+                <div className="font-mono text-sm space-y-2 mb-8 h-32 overflow-hidden text-cyber-blue/80">
+                  {logs.map((log, i) => (
+                    <motion.div key={i} initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }}>
+                      {log}
+                    </motion.div>
+                  ))}
+                </div>
+
+                <h2 className="text-3xl md:text-5xl font-bold text-white mb-6 leading-tight">
+                  ARCHITECTING SECURE <br />
+                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyber-blue to-cyber-pink">
+                    DIGITAL ECOSYSTEMS
+                  </span>
+                </h2>
+
+                <p className="text-gray-400 max-w-xl mb-8 leading-relaxed">
+                  I specialize in building robust, scalable web applications with a security-first mindset.
+                  Merging creative frontend design with powerful backend logic.
+                </p>
+              </div>
+
+              <div className="flex gap-4">
+                <button
+                  onClick={(e) => {
+                    e.preventDefault();
+                    document.getElementById('projects')?.scrollIntoView({ behavior: 'smooth' });
+                  }}
+                  className="cyber-button group"
+                >
+                  <span className="group-hover:text-white transition-colors">INITIALIZE PROJECT VIEW</span>
+                </button>
+                <a href="#contact" className="px-6 py-2 font-cyber uppercase text-gray-400 hover:text-white transition-colors border border-transparent hover:border-white/20">
+                  CONTACT_ME
+                </a>
+              </div>
+
+              {/* Decorative Elements */}
+              <div className="absolute bottom-4 right-4 flex gap-1">
+                {[1, 2, 3].map(i => (
+                  <div key={i} className={`w - 2 h - 8 ${i === 3 ? 'bg-cyber-pink animate-pulse' : 'bg-cyber-blue/30'} `}></div>
+                ))}
+              </div>
+            </div>
+
+            {/* Horizontal Stats Bar */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              <StatCard label="PROJECTS" value="12+" icon={FaCode} delay={0.5} />
+              <StatCard label="EXPERIENCE" value="3 YEARS" icon={FaNetworkWired} delay={0.6} />
+              <StatCard label="STACK" value="FULL" icon={FaTerminal} delay={0.7} />
+              <StatCard label="SECURITY" value="HIGH" icon={FaGithub} delay={0.8} />
+            </div>
+          </motion.div>
+
         </div>
-      </div>
-      
-      {/* Scroll indicator */}
-      <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
-        <a href="#about" className="text-cyber-blue">
-          <FaChevronDown size={24} />
-        </a>
-      </div>
+      )}
     </section>
   );
 };
+
+const SocialButton = ({ icon: Icon, href, delay }: { icon: any, href: string, delay: number }) => (
+  <motion.a
+    href={href}
+    target="_blank"
+    rel="noreferrer"
+    initial={{ opacity: 0, scale: 0 }}
+    animate={{ opacity: 1, scale: 1 }}
+    transition={{ delay: 0.5 + delay }}
+    className="w-10 h-10 flex items-center justify-center rounded-full border border-cyber-blue/30 text-cyber-blue hover:bg-cyber-blue hover:text-black transition-all duration-300"
+  >
+    <Icon />
+  </motion.a>
+);
+
+const StatCard = ({ label, value, icon: Icon, delay }: { label: string, value: string, icon: any, delay: number }) => (
+  <motion.div
+    initial={{ opacity: 0, y: 20 }}
+    animate={{ opacity: 1, y: 0 }}
+    transition={{ delay }}
+    className="bg-cyber-light/50 border border-white/5 p-4 rounded hover:border-cyber-blue/30 transition-colors"
+  >
+    <div className="flex justify-between items-start mb-2">
+      <span className="text-xs font-mono text-gray-500">{label}</span>
+      <Icon className="text-cyber-blue/50 text-xs" />
+    </div>
+    <div className="text-xl font-bold font-cyber text-white">{value}</div>
+  </motion.div>
+);
 
 export default Hero;

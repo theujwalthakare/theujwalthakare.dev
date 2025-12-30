@@ -7,6 +7,7 @@ import BlogDetailPage from './pages/BlogDetailPage';
 import CaseStudiesPage from './pages/CaseStudiesPage';
 import StudyMaterialPage from './pages/StudyMaterialPage';
 import NotFoundPage from './pages/NotFoundPage';
+import LogArchive from './components/sections/LogArchive';
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
       <Route element={<Layout />}>
         <Route index element={<HomePage />} />
         <Route path="blogs" element={<BlogsPage />} />
+        <Route path="logs" element={<LogArchive />} />
         <Route path="blogs/:slug" element={<BlogDetailPage />} />
         <Route path="case-studies" element={<CaseStudiesPage />} />
         <Route path="study-material" element={<StudyMaterialPage />} />

@@ -1,142 +1,134 @@
-import { useCallback, useEffect, useState } from 'react';
-import { FaBars, FaTimes } from 'react-icons/fa';
-import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { FaBars, FaTimes, FaWifi, FaBatteryFull } from 'react-icons/fa';
+
+import useSound from '../../hooks/useSound';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const play = useSound();
+  const [time, setTime] = useState(new Date());
   const [scrolled, setScrolled] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
 
+  // Clock Timer
+  useEffect(() => {
+    const timer = setInterval(() => setTime(new Date()), 1000);
+    return () => clearInterval(timer);
+  }, []);
+
+  // Scroll Handler
   useEffect(() => {
     const handleScroll = () => {
-      if (window.scrollY > 50) {
-        setScrolled(true);
-      } else {
-        setScrolled(false);
-      }
+      setScrolled(window.scrollY > 20);
     };
-
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const sectionLinks = [
-    { name: 'About', hash: '#about' },
-    { name: 'Skills', hash: '#skills' },
-    { name: 'Experience', hash: '#experience' },
-    { name: 'Projects', hash: '#projects' },
-    { name: 'Contact', hash: '#contact' },
+  const handleSectionClick = (hash: string) => {
+    setIsOpen(false);
+    if (location.pathname !== '/') {
+      navigate('/');
+      setTimeout(() => {
+        const element = document.querySelector(hash);
+        if (element) element.scrollIntoView({ behavior: 'smooth' });
+      }, 100);
+    } else {
+      const element = document.querySelector(hash);
+      if (element) element.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
+  const navItems = [
+    { name: 'HOME', path: '/' },
+    { name: 'ABOUT', hash: '#about' },
+    { name: 'SKILLS', hash: '#skills' },
+    { name: 'PROJECTS', hash: '#projects' },
+    { name: 'CONTACT', hash: '#contact' },
   ];
 
-  const scrollToHash = useCallback((hash: string) => {
-    const targetElement = document.querySelector(hash);
-    if (!targetElement) return;
-    const navbarHeight = document.querySelector('nav')?.offsetHeight ?? 0;
-    const targetPosition = targetElement.getBoundingClientRect().top + window.scrollY - navbarHeight;
-    window.scrollTo({ top: targetPosition, behavior: 'smooth' });
-  }, []);
-
-  const handleSectionClick = useCallback(
-    (hash: string) => {
-      setIsOpen(false);
-      const onHome = location.pathname === '/' || location.pathname === '';
-      if (onHome) {
-        scrollToHash(hash);
-      } else {
-        navigate({ pathname: '/', hash });
-      }
-    },
-    [location.pathname, navigate, scrollToHash],
-  );
-
-  const sharedLinkClasses =
-    'font-mono text-white hover:text-cyber-blue transition-colors duration-300';
-
   return (
-    <nav className={`fixed w-full z-50 transition-all duration-300 ${
-      scrolled ? 'bg-cyber-dark/80 backdrop-blur-md py-2' : 'bg-transparent py-4'
-    }`}>
-      <div className="container mx-auto px-4 flex justify-center  items-center">
-        <div className="hidden md:flex items-center space-x-7">
-          <NavLink
-            to="/"
-            className={({ isActive }) =>
-              `${sharedLinkClasses} ${isActive ? 'text-cyber-blue' : ''}`
-            }
-            onClick={() => setIsOpen(false)}
-            end
-          >
-            Home
-          </NavLink>
+    <nav
+      className={`fixed top-0 left-0 w-full z-50 border-b border-cyber-blue/20 transition-all duration-300 ${scrolled ? 'bg-black/90 backdrop-blur-md py-2' : 'bg-transparent py-4'
+        }`}
+    >
+      <div className="container mx-auto px-4 flex justify-between items-center relative">
 
-          {sectionLinks.map((link) => (
-            <button
-              key={link.name}
-              type="button"
-              className={sharedLinkClasses}
-              onClick={() => handleSectionClick(link.hash)}
-            >
-              {link.name}
-            </button>
-          ))}
-
-          {/* {pageLinks.map((link) => (
-            <NavLink
-              key={link.name}
-              to={link.path}
-              className={({ isActive }) =>
-                `${sharedLinkClasses} ${isActive ? 'text-cyber-blue' : ''}`
-              }
-              onClick={() => setIsOpen(false)}
-            >
-              {link.name}
-            </NavLink>
-          ))} */}
+        {/* Left: Brand & Status */}
+        <div className="flex items-center gap-4">
+          <div className="text-xl font-bold font-cyber text-cyber-blue tracking-wider">
+            UJWAL.DEV <span className="text-xs align-top opacity-70">v2.0</span>
+          </div>
+          <div className="hidden md:flex items-center gap-2 text-xs font-mono text-cyber-blue/60 border-l border-cyber-blue/30 pl-4">
+            <span className="flex items-center gap-1">
+              <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
+              SYSTEM ONLINE
+            </span>
+          </div>
         </div>
 
-        {/* Mobile Navigation Button */}
+        {/* Center: Navigation Links (Desktop) */}
+        <div className="hidden md:flex items-center gap-1 bg-cyber-blue/5 border border-cyber-blue/10 px-2 py-1 rounded-full backdrop-blur-sm">
+          {navItems.map((item) => (
+            <button
+              key={item.name}
+              onClick={() => {
+                play('click');
+                item.hash ? handleSectionClick(item.hash) : navigate('/');
+              }}
+              onMouseEnter={() => play('hover')}
+              className="px-4 py-1.5 text-xs text-cyber-blue hover:text-white hover:bg-cyber-blue/20 rounded-full transition-all duration-300 font-mono tracking-widest relative group overflow-hidden"
+            >
+              <span className="relative z-10">{item.name}</span>
+            </button>
+          ))}
+        </div>
+
+        {/* Right: HUD Data */}
+        <div className="hidden md:flex items-center gap-6 font-mono text-xs text-cyber-blue/80">
+          <div className="flex flex-col items-end leading-tight">
+            <span>PUNE, IN</span>
+            <span className="opacity-50">21.1458° N, 79.0882° E</span>
+          </div>
+          <div className="h-8 w-px bg-cyber-blue/20"></div>
+          <div className="flex flex-col items-end leading-tight min-w-[80px]">
+            <span>{time.toLocaleTimeString([], { hour12: false })}</span>
+            <span className="opacity-50 tracking-wider">UTC+05:30</span>
+          </div>
+          <div className="flex gap-3 text-cyber-blue">
+            <FaWifi title="Connection Stable" />
+            <FaBatteryFull title="Power Optimal" />
+          </div>
+        </div>
+
+        {/* Mobile Toggle */}
         <button
-          className="md:hidden justify-end text-white focus:outline-none"
+          className="md:hidden text-cyber-blue hover:text-white transition-colors"
           onClick={() => setIsOpen(!isOpen)}
         >
           {isOpen ? <FaTimes size={24} /> : <FaBars size={24} />}
         </button>
       </div>
 
-      {/* Mobile Navigation Menu */}
+      {/* Mobile Menu Overlay */}
       {isOpen && (
-        <div className="md:hidden bg-cyber-light border-t border-cyber-blue/30">
-          <div className="container mx-auto px-4 py-4 flex flex-col space-y-4">
-            <Link
-              to="/"
-              className={sharedLinkClasses}
-              onClick={() => setIsOpen(false)}
-            >
-              Home
-            </Link>
-
-            {sectionLinks.map((link) => (
+        <div className="md:hidden absolute top-full left-0 w-full bg-black/95 backdrop-blur-xl border-b border-cyber-blue/30 pb-6 shadow-2xl">
+          <div className="flex flex-col p-4 gap-2">
+            {navItems.map((item) => (
               <button
-                key={link.name}
-                type="button"
-                className={sharedLinkClasses}
-                onClick={() => handleSectionClick(link.hash)}
+                key={item.name}
+                onClick={() => handleSectionClick(item.hash || '/')}
+                className="p-3 text-left border-l-2 border-cyber-blue/30 bg-cyber-blue/5 text-cyber-blue font-mono hover:border-cyber-blue hover:bg-cyber-blue/10 transition-all"
               >
-                {link.name}
+                {item.name}
               </button>
             ))}
-
-            {/* {pageLinks.map((link) => (
-              <Link
-                key={link.name}
-                to={link.path}
-                className={sharedLinkClasses}
-                onClick={() => setIsOpen(false)}
-              >
-                {link.name}
-              </Link>
-            ))} */}
+            <div className="mt-4 pt-4 border-t border-white/10 flex justify-between text-xs font-mono text-gray-500">
+              <span>SYSTEM STATUS: NORMAL</span>
+              <span>{time.toLocaleTimeString()}</span>
+            </div>
           </div>
         </div>
       )}

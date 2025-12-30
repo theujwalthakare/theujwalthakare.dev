@@ -1,81 +1,26 @@
 import { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { FaGithub, FaExternalLinkAlt } from 'react-icons/fa';
+import HolographicCard from '../ui/HolographicCard';
+import DecryptedText from '../ui/DecryptedText';
+import { PROJECTS } from '../../data/projects';
 
 const Projects = () => {
   const [filter, setFilter] = useState('all');
 
-  const projects = [
-    {
-      title: "BookNJoy - Event Ticketing App",
-      description:
-        "A full-featured event booking platform allowing users to browse, book, and generate tickets for events. Built using a secure and scalable full-stack architecture.",
-      image: "/images/booknjoy.png",
-      technologies: ["React", "Spring Boot", "Hibernate", "PostgreSQL"],
-      category: "fullstack",
-      github: "https://github.com/theujwalthakare/aaomile",
-      demo: "#" // Replace with actual demo link
-    },
-    {
-      title: "UbeSecure - Cyber Complaint Portal",
-      description:
-        "A concept-stage citizen complaint platform designed to report cybercrime incidents to authorities securely with OTP verification, dashboards, and real-time tracking.",
-      image: "/images/ubsecure.png",
-      technologies: ["HTML", "JavaScript", "PHP", "MySQL", "Security Workflow"],
-      category: "fullstack",
-      github: "https://github.com/theujwalthakare/ubsecure",
-      demo: "https://ursecure.run.place" // Replace with actual demo link
-    },
-    {
-      title: "Election Portal - Student Society Voting",
-      description:"The EMAS Election & Activity Portal is an exclusive digital platform dedicated entirely to the EMAS Committee. It is designed to manage all official committee activities, including elections, announcements, event updates, and member communications. This portal ensures a transparent and secure election process—right from nomination submission to final results. Every activity conducted by the EMAS Committee is regularly updated on the website, providing students with clear and real-time information.",
-      image: "/images/election-portal.png", // Replace with actual image path
-      technologies: ["HTML", "Tailwind CSS", "JavaScript", "Firebase"],
-      category: "fullstack",
-      github: "https://github.com/theujwalthakare/Election-Portal", // Replace with actual GitHub repository
-      demo: "https://election-portal-37900.web.app/"
-    },
-    {
-      title: "Personal Portfolio Website",
-      description:
-        "Cyberpunk-themed personal portfolio website to showcase my technical skills, experience, and featured projects. Responsive and animated with Framer Motion.",
-      image: "/images/portfolio.png", // Replace with actual image path
-      technologies: ["React", "Tailwind CSS", "Framer Motion", "Vite"],
-      category: "frontend",
-      github: "https://github.com/theujwalthakare/theujwalthakare.dev",
-      demo: "https://www.theujwalthakare.dev"
-    }
-    // {
-    //   title: "Crop Info Viewer - PHP + PostgreSQL",
-    //   description:
-    //     "Web app that displays crop details dynamically by fetching data from PostgreSQL using PHP. Designed for agricultural database systems.",
-    //   image: "cropinfo.jpg", // Replace with actual image path
-    //   technologies: ["PHP", "PostgreSQL", "HTML/CSS"],
-    //   category: "backend",
-    //   github: "https://github.com/yourusername/crop-info-viewer",
-    //   demo: "https://cropinfo-demo.com"
-    // },
-    // {
-    //   title: "Student Data Manager - Flat File in PHP",
-    //   description:
-    //     "Displays student data stored in flat files, calculates percentages, and formats data into a readable tabular view using pure PHP logic.",
-    //   image: "studentdata.jpg", // Replace with actual image path
-    //   technologies: ["PHP", "HTML", "File Handling"],
-    //   category: "backend",
-    //   github: "https://github.com/yourusername/student-data-manager",
-    //   demo: "https://studentdatademo.com"
-    // }
-  ];
-
   const filteredProjects =
     filter === 'all'
-      ? projects
-      : projects.filter((project) => project.category === filter);
+      ? PROJECTS
+      : PROJECTS.filter((project) => project.category === filter);
+
 
   return (
-    <section id="projects" className="py-20 bg-cyber-dark">
+    <section id="projects" className="py-20 relative">
       <div className="container mx-auto px-4">
         <div className="text-center mb-12">
-          <h2 className="cyber-heading text-3xl mb-6">Featured Projects</h2>
+          <h2 className="text-3xl md:text-4xl font-dystopian mb-6 text-cyber-blue">
+            <DecryptedText text="FEATURED PROJECTS" />
+          </h2>
           <div className="h-1 w-24 bg-cyber-blue mx-auto mb-8"></div>
           <p className="text-gray-300 max-w-2xl mx-auto mb-8">
             Here are some of the fully working, end-to-end projects I've built. Each one reflects my skills in real-world problem-solving and development.
@@ -86,11 +31,10 @@ const Projects = () => {
             {['all', 'frontend', 'backend', 'fullstack'].map((cat) => (
               <button
                 key={cat}
-                className={`px-4 py-2 border ${
-                  filter === cat
-                    ? 'border-cyber-blue text-cyber-blue bg-cyber-blue/10'
-                    : 'border-gray-600 text-gray-400 hover:border-cyber-blue hover:text-cyber-blue'
-                } transition-colors duration-300`}
+                className={`px - 4 py - 2 border ${filter === cat
+                  ? 'border-cyber-blue text-cyber-blue bg-cyber-blue/10'
+                  : 'border-gray-600 text-gray-400 hover:border-cyber-blue hover:text-cyber-blue'
+                  } transition - colors duration - 300`}
                 onClick={() => setFilter(cat)}
               >
                 {cat.charAt(0).toUpperCase() + cat.slice(1)}
@@ -99,58 +43,67 @@ const Projects = () => {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {filteredProjects.map((project, index) => (
-            <div key={index} className="cyber-card group">
-              {/* Project Image */}
-              <div className="relative overflow-hidden mb-4 aspect-video bg-cyber-light">
-                <div className="w-full h-full bg-gradient-to-br from-cyber-blue/20 to-cyber-pink/20 flex items-center justify-center">
-                  <img src={project.image} alt={project.title} className="w-full h-full object-center effect" />
-                </div>
+        <AnimatePresence>
+          <motion.div
+            layout
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="grid gap-6 md:grid-cols-2 lg:grid-cols-3"
+          >
+            {filteredProjects.map((project) => (
+              <HolographicCard key={project.title}>
+                <div className="flex flex-col h-full p-6">
+                  <div className="mb-4 flex items-start justify-between">
+                    <div>
+                      <h3 className="text-xl font-bold text-white group-hover:text-cyber-blue transition-colors duration-300">
+                        {project.title}
+                      </h3>
+                      <span className="text-xs text-cyber-blue font-mono mt-1 block">
+                        {project.category} // {project.technologies.slice(0, 2).join(', ')}
+                      </span>
+                    </div>
+                    <div className="flex gap-3">
+                      <a
+                        href={project.github}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-gray-400 hover:text-white transition-colors"
+                        title="View Code"
+                      >
+                        <FaGithub size={20} />
+                      </a>
+                      <a
+                        href={project.demo}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-gray-400 hover:text-cyber-blue transition-colors"
+                        title="Live Demo"
+                      >
+                        <FaExternalLinkAlt size={20} />
+                      </a>
+                    </div>
+                  </div>
 
-                {/* Overlay */}
-                <div className="absolute inset-0 bg-cyber-dark/80 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                  <div className="flex space-x-4">
-                    <a
-                      href={project.github}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="p-2 bg-cyber-light border border-cyber-blue text-cyber-blue hover:bg-cyber-blue hover:text-cyber-dark transition-colors duration-300"
-                      aria-label="View GitHub Repository"
-                    >
-                      <FaGithub size={20} />
-                    </a>
-                    <a
-                      href={project.demo}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="p-2 bg-cyber-light border border-cyber-pink text-cyber-pink hover:bg-cyber-pink hover:text-cyber-dark transition-colors duration-300"
-                      aria-label="View Live Demo"
-                    >
-                      <FaExternalLinkAlt size={20} />
-                    </a>
+                  <p className="text-gray-400 text-sm mb-6 flex-grow leading-relaxed">
+                    {project.description}
+                  </p>
+
+                  <div className="flex flex-wrap gap-2 mt-auto">
+                    {project.technologies.map((tech) => (
+                      <span
+                        key={tech}
+                        className="rounded-full bg-cyber-blue/10 px-3 py-1 text-xs text-cyber-blue border border-cyber-blue/20"
+                      >
+                        {tech}
+                      </span>
+                    ))}
                   </div>
                 </div>
-              </div>
-
-              {/* Project Info */}
-              <h3 className="text-xl font-cyber text-cyber-blue mb-2">{project.title}</h3>
-              <p className="text-gray-400 mb-4">{project.description}</p>
-
-              {/* Technologies */}
-              <div className="flex flex-wrap gap-2 mt-auto">
-                {project.technologies.map((tech, techIndex) => (
-                  <span
-                    key={techIndex}
-                    className="text-xs px-2 py-1 bg-cyber-light border border-cyber-blue/30 text-cyber-blue"
-                  >
-                    {tech}
-                  </span>
-                ))}
-              </div>
-            </div>
-          ))}
-        </div>
+              </HolographicCard>
+            ))}
+          </motion.div>
+        </AnimatePresence>
       </div>
     </section>
   );
