@@ -10,6 +10,9 @@ const Contact = () => {
   const [status, setStatus] = useState<'idle' | 'encrypting' | 'sending' | 'success' | 'error'>('idle');
   const [logs, setLogs] = useState<string[]>([]);
   const play = useSound();
+  const panelSurface = { background: 'var(--panel-bg)', border: '1px solid var(--panel-border)', boxShadow: 'var(--panel-glow)' };
+  const textPrimary = { color: 'var(--text-primary)' };
+  const textStrong = { color: 'var(--text-strong)' };
 
   const addLog = (msg: string) => setLogs(prev => [...prev.slice(-4), `> ${msg}`]);
 
@@ -46,9 +49,9 @@ const Contact = () => {
   };
 
   return (
-    <section id="contact" className="py-24 relative overflow-hidden min-h-screen flex items-center">
+    <section id="contact" className="py-24 relative overflow-hidden min-h-screen flex items-center" style={{ backgroundColor: 'var(--bg-body)' }}>
       {/* Matrix Rain / Grid Overlay */}
-      <div className="absolute inset-0 bg-[linear-gradient(rgba(0,240,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(0,240,255,0.03)_1px,transparent_1px)] bg-[length:30px_30px] opacity-20 pointer-events-none"></div>
+      <div className="absolute inset-0 bg-[length:30px_30px] opacity-25 pointer-events-none" style={{ backgroundImage: 'linear-gradient(var(--bg-grid-line) 1px, transparent 1px), linear-gradient(90deg, var(--bg-grid-line) 1px, transparent 1px)' }}></div>
 
       <div className="container mx-auto px-4 relative z-10 w-full max-w-5xl">
         <div className="grid md:grid-cols-2 gap-12 items-center">
@@ -56,18 +59,18 @@ const Contact = () => {
           {/* Left: Info Terminal */}
           <div className="space-y-8">
             <div>
-              <h2 className="text-4xl md:text-5xl font-dystopian text-white mb-2">
+              <h2 className="text-4xl md:text-5xl font-dystopian mb-2" style={textStrong}>
                 <DecryptedText text="ENCRYPTED COMMS" />
               </h2>
               <div className="h-1 w-24 bg-cyber-pink"></div>
             </div>
 
-            <p className="text-gray-400 font-mono text-sm leading-relaxed border-l-2 border-cyber-blue/30 pl-4">
+            <p className="font-mono text-sm leading-relaxed border-l-2 border-cyber-blue/30 pl-4" style={textPrimary}>
               Secure channel open. Send your inquiries, collaboration proposals, or mission briefings directly to my encrypted inbox.
               All transmissions are protected by end-to-end quantum encryption.
             </p>
 
-            <div className="bg-cyber-dark/50 border border-cyber-blue/20 p-6 font-mono text-xs rounded-lg relative overflow-hidden group">
+            <div className="p-6 font-mono text-xs rounded-lg relative overflow-hidden group" style={panelSurface}>
               <div className="absolute top-0 right-0 p-2 opacity-50"><FaLock /></div>
               <div className="space-y-4">
                 <div className="flex items-center gap-3">
@@ -93,21 +96,21 @@ const Contact = () => {
           {/* Right: Input Terminal */}
           <div className="relative">
             {/* Terminal Frame */}
-            <div className="bg-black/80 backdrop-blur-md border border-cyber-blue/30 rounded-lg overflow-hidden shadow-[0_0_30px_rgba(0,240,255,0.1)]">
+            <div className="backdrop-blur-md rounded-lg overflow-hidden" style={panelSurface}>
               {/* Header */}
-              <div className="bg-cyber-blue/10 border-b border-cyber-blue/30 p-2 flex items-center justify-between">
+              <div className="p-2 flex items-center justify-between" style={{ background: 'var(--panel-bg-shade)', borderBottom: '1px solid var(--panel-border)' }}>
                 <div className="flex gap-2 px-2">
                   <div className="w-3 h-3 rounded-full bg-red-500/50"></div>
                   <div className="w-3 h-3 rounded-full bg-yellow-500/50"></div>
                   <div className="w-3 h-3 rounded-full bg-green-500/50"></div>
                 </div>
-                <div className="font-mono text-xs text-cyber-blue/70 flex items-center gap-2">
+                <div className="font-mono text-xs text-cyber-blue/80 flex items-center gap-2">
                   <FaTerminal /> bash -- secure_uplink
                 </div>
               </div>
 
               {/* Form Body */}
-              <div className="p-6 relative min-h-[400px]">
+              <div className="p-6 relative min-h-[400px]" style={textPrimary}>
                 {status === 'success' ? (
                   <motion.div
                     initial={{ opacity: 0 }}
@@ -115,8 +118,8 @@ const Contact = () => {
                     className="absolute inset-0 flex flex-col items-center justify-center text-center p-8"
                   >
                     <FaCheckCircle className="text-5xl text-cyber-green mb-4" />
-                    <h3 className="text-xl font-dystopian text-white mb-2">PACKET SENT</h3>
-                    <p className="text-gray-400 font-mono text-xs">Your transmission has been successfully uploaded to the server.</p>
+                    <h3 className="text-xl font-dystopian mb-2" style={textStrong}>PACKET SENT</h3>
+                    <p className="font-mono text-xs" style={textPrimary}>Your transmission has been successfully uploaded to the server.</p>
                     <button
                       onClick={() => setStatus('idle')}
                       className="mt-6 text-cyber-blue hover:text-white underline font-mono text-xs"
@@ -141,7 +144,8 @@ const Contact = () => {
                         value={formData.message}
                         onChange={handleChange}
                         rows={4}
-                        className="w-full bg-cyber-blue/5 border border-cyber-blue/20 rounded p-3 text-white font-mono text-sm focus:border-cyber-blue focus:outline-none focus:shadow-[0_0_10px_rgba(0,240,255,0.2)] transition-all resize-none"
+                        className="w-full border rounded p-3 font-mono text-sm transition-all resize-none"
+                        style={{ background: 'var(--panel-bg-lighter)', borderColor: 'var(--panel-border)', color: 'var(--text-primary)' }}
                         placeholder="> ENTER_ENCRYPTED_MESSAGE..."
                       />
                     </div>
@@ -163,9 +167,10 @@ const Contact = () => {
                       type="submit"
                       disabled={status !== 'idle'}
                       className={`w-full py-4 font-mono font-bold text-sm tracking-widest transition-all duration-300 relative overflow-hidden group border ${status === 'idle'
-                        ? 'bg-cyber-blue/10 border-cyber-blue text-cyber-blue hover:bg-cyber-blue hover:text-black'
-                        : 'bg-cyber-dark border-gray-700 text-gray-500 cursor-wait'
+                        ? 'border-cyber-blue text-cyber-blue'
+                        : 'border-gray-400 text-gray-500 cursor-wait'
                         }`}
+                      style={status === 'idle' ? { background: 'var(--panel-bg-lighter)' } : { background: 'rgba(12, 14, 26, 0.2)' }}
                     >
                       {status === 'idle' && (
                         <span className="flex items-center justify-center gap-2 relative z-10">
@@ -201,7 +206,8 @@ const TerminalInput = ({ label, placeholder, name, value, onChange }: any) => (
         name={name}
         value={value}
         onChange={onChange}
-        className="w-full bg-cyber-blue/5 border border-cyber-blue/20 rounded py-2.5 pl-8 pr-3 text-white font-mono text-sm focus:border-cyber-blue focus:outline-none focus:shadow-[0_0_10px_rgba(0,240,255,0.2)] transition-all"
+        className="w-full border rounded py-2.5 pl-8 pr-3 font-mono text-sm transition-all"
+        style={{ background: 'var(--panel-bg-lighter)', borderColor: 'var(--panel-border)', color: 'var(--text-primary)' }}
         placeholder={placeholder}
       />
     </div>

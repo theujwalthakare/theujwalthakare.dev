@@ -63,8 +63,8 @@ const Nebula = (props: any) => {
 
 const CyberCanvas = () => {
     return (
-        <div className="fixed inset-0 z-0 h-full w-full pointer-events-none">
-            <Canvas camera={{ position: [0, 0, 1] }}>
+        <div className="fixed inset-0 z-[-1] h-full w-full pointer-events-none">
+            <Canvas camera={{ position: [0, 0, 1] }} gl={{ antialias: true }}>
                 <Stars />
                 <Nebula />
             </Canvas>

@@ -9,6 +9,14 @@ import CyberCanvas from '../ui/CyberCanvas';
 const Layout = () => {
   const location = useLocation();
 
+  // Initialize theme on mount
+  useEffect(() => {
+    const stored = localStorage.getItem('theme');
+    const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const theme = (stored === 'light' || stored === 'dark') ? stored : (prefersDark ? 'dark' : 'light');
+    document.documentElement.dataset.theme = theme;
+  }, []);
+
   useEffect(() => {
     const scrollToTarget = (hash: string) => {
       const target = document.querySelector(hash);

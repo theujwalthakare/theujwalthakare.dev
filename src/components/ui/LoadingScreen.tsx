@@ -10,15 +10,10 @@ const LoadingScreen: React.FC<LoadingScreenProps> = ({ onComplete }) => {
     const [status, setStatus] = useState('INITIALIZING KERNEL...');
 
     useEffect(() => {
+        let counter = 0;
         const interval = setInterval(() => {
+            counter++;
             setProgress((prev) => {
-                if (prev >= 100) {
-                    clearInterval(interval);
-                    setTimeout(onComplete, 500);
-                    return 100;
-                }
-
-                // Random progress jumps for hacker feel
                 const jump = Math.random() * 15;
                 const next = Math.min(prev + jump, 100);
 
@@ -30,6 +25,13 @@ const LoadingScreen: React.FC<LoadingScreenProps> = ({ onComplete }) => {
 
                 return next;
             });
+
+            // Stop after enough iterations or if we reach 100%
+            if (counter > 20) {
+                clearInterval(interval);
+                setProgress(100);
+                setTimeout(onComplete, 500);
+            }
         }, 150);
 
         return () => clearInterval(interval);
@@ -37,7 +39,8 @@ const LoadingScreen: React.FC<LoadingScreenProps> = ({ onComplete }) => {
 
     return (
         <motion.div
-            className="fixed inset-0 z-[100] bg-cyber-dark flex flex-col items-center justify-center font-mono text-cyber-blue"
+            className="fixed inset-0 z-[100] flex flex-col items-center justify-center font-mono text-cyber-blue"
+            style={{ backgroundColor: 'var(--bg-body)' }}
             exit={{ opacity: 0, transition: { duration: 0.8 } }}
         >
             <div className="w-80 max-w-[90%]">

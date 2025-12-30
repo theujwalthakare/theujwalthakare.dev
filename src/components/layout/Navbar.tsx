@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { FaBars, FaTimes, FaWifi, FaBatteryFull } from 'react-icons/fa';
 
@@ -9,6 +9,12 @@ const Navbar = () => {
   const play = useSound();
   const [time, setTime] = useState(new Date());
   const [scrolled, setScrolled] = useState(false);
+  const prefersDark = useMemo(() => window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches, []);
+  const [theme, setTheme] = useState<'dark' | 'light'>(() => {
+    const stored = localStorage.getItem('theme');
+    if (stored === 'light' || stored === 'dark') return stored;
+    return prefersDark ? 'dark' : 'light';
+  });
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -27,6 +33,18 @@ const Navbar = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  // Theme sync
+  useEffect(() => {
+    document.documentElement.dataset.theme = theme;
+    localStorage.setItem('theme', theme);
+  }, [theme]);
+
+  const toggleTheme = () => {
+    const next = theme === 'dark' ? 'light' : 'dark';
+    setTheme(next);
+    play('click');
+  };
+
   const handleSectionClick = (hash: string) => {
     setIsOpen(false);
     if (location.pathname !== '/') {
@@ -34,7 +52,7 @@ const Navbar = () => {
       setTimeout(() => {
         const element = document.querySelector(hash);
         if (element) element.scrollIntoView({ behavior: 'smooth' });
-      }, 100);
+      }, 120);
     } else {
       const element = document.querySelector(hash);
       if (element) element.scrollIntoView({ behavior: 'smooth' });
@@ -43,7 +61,7 @@ const Navbar = () => {
 
   const navItems = [
     { name: 'HOME', path: '/' },
-    { name: 'ABOUT', hash: '#about' },
+    { name: 'ABOUT', path: '/about' },
     { name: 'SKILLS', hash: '#skills' },
     { name: 'PROJECTS', hash: '#projects' },
     { name: 'CONTACT', hash: '#contact' },
@@ -76,7 +94,8 @@ const Navbar = () => {
               key={item.name}
               onClick={() => {
                 play('click');
-                item.hash ? handleSectionClick(item.hash) : navigate('/');
+                if (item.path) navigate(item.path);
+                else if (item.hash) handleSectionClick(item.hash);
               }}
               onMouseEnter={() => play('hover')}
               className="px-4 py-1.5 text-xs text-cyber-blue hover:text-white hover:bg-cyber-blue/20 rounded-full transition-all duration-300 font-mono tracking-widest relative group overflow-hidden"
@@ -97,9 +116,17 @@ const Navbar = () => {
             <span>{time.toLocaleTimeString([], { hour12: false })}</span>
             <span className="opacity-50 tracking-wider">UTC+05:30</span>
           </div>
-          <div className="flex gap-3 text-cyber-blue">
+          <div className="flex items-center gap-3 text-cyber-blue">
             <FaWifi title="Connection Stable" />
             <FaBatteryFull title="Power Optimal" />
+            <button
+              onClick={toggleTheme}
+              onMouseEnter={() => play('hover')}
+              className="ml-2 px-3 py-1 rounded-full border border-cyber-blue/30 bg-cyber-blue/10 text-[11px] tracking-widest hover:bg-cyber-blue/20 transition-colors"
+              aria-label="Toggle theme"
+            >
+              {theme === 'dark' ? 'LIGHT' : 'DARK'} MODE
+            </button>
           </div>
         </div>
 
@@ -119,12 +146,28 @@ const Navbar = () => {
             {navItems.map((item) => (
               <button
                 key={item.name}
-                onClick={() => handleSectionClick(item.hash || '/')}
+                onClick={() => {
+                  if (item.path) {
+                    setIsOpen(false);
+                    navigate(item.path);
+                  } else if (item.hash) {
+                    handleSectionClick(item.hash);
+                  }
+                }}
                 className="p-3 text-left border-l-2 border-cyber-blue/30 bg-cyber-blue/5 text-cyber-blue font-mono hover:border-cyber-blue hover:bg-cyber-blue/10 transition-all"
               >
                 {item.name}
               </button>
             ))}
+            <button
+              onClick={() => {
+                toggleTheme();
+                setIsOpen(false);
+              }}
+              className="mt-2 p-3 text-left border-l-2 border-cyber-blue/30 bg-cyber-blue/5 text-cyber-blue font-mono hover:border-cyber-blue hover:bg-cyber-blue/10 transition-all"
+            >
+              SWITCH TO {theme === 'dark' ? 'LIGHT' : 'DARK'} MODE
+            </button>
             <div className="mt-4 pt-4 border-t border-white/10 flex justify-between text-xs font-mono text-gray-500">
               <span>SYSTEM STATUS: NORMAL</span>
               <span>{time.toLocaleTimeString()}</span>

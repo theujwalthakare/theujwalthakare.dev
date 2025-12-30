@@ -7,6 +7,8 @@ import { PROJECTS } from '../../data/projects';
 
 const Projects = () => {
   const [filter, setFilter] = useState('all');
+  const textPrimary = { color: 'var(--text-primary)' };
+  const textStrong = { color: 'var(--text-strong)' };
 
   const filteredProjects =
     filter === 'all'
@@ -15,14 +17,14 @@ const Projects = () => {
 
 
   return (
-    <section id="projects" className="py-20 relative">
+    <section id="projects" className="py-20 relative" style={{ backgroundColor: 'var(--bg-body)' }}>
       <div className="container mx-auto px-4">
         <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-dystopian mb-6 text-cyber-blue">
+          <h2 className="text-4xl md:text-5xl font-dystopian mb-6" style={textStrong}>
             <DecryptedText text="FEATURED PROJECTS" />
           </h2>
           <div className="h-1 w-24 bg-cyber-blue mx-auto mb-8"></div>
-          <p className="text-gray-300 max-w-2xl mx-auto mb-8">
+          <p className="max-w-2xl mx-auto mb-8" style={textPrimary}>
             Here are some of the fully working, end-to-end projects I've built. Each one reflects my skills in real-world problem-solving and development.
           </p>
 
@@ -31,10 +33,10 @@ const Projects = () => {
             {['all', 'frontend', 'backend', 'fullstack'].map((cat) => (
               <button
                 key={cat}
-                className={`px - 4 py - 2 border ${filter === cat
-                  ? 'border-cyber-blue text-cyber-blue bg-cyber-blue/10'
-                  : 'border-gray-600 text-gray-400 hover:border-cyber-blue hover:text-cyber-blue'
-                  } transition - colors duration - 300`}
+                className={`rounded-full px-4 py-2 border text-sm font-semibold tracking-wide transition-colors duration-300 ${filter === cat
+                  ? 'border-cyber-blue text-cyber-blue bg-cyber-blue/10 shadow-[0_0_15px_rgba(255,59,111,0.25)]'
+                  : 'border-[color:var(--panel-border)] text-[color:var(--text-primary)]/70 hover:border-cyber-blue hover:text-cyber-blue'
+                  }`}
                 onClick={() => setFilter(cat)}
               >
                 {cat.charAt(0).toUpperCase() + cat.slice(1)}
@@ -49,14 +51,14 @@ const Projects = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="grid gap-6 md:grid-cols-2 lg:grid-cols-3"
+            className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 rounded-3xl"
           >
             {filteredProjects.map((project) => (
               <HolographicCard key={project.title}>
-                <div className="flex flex-col h-full p-6">
+                <div className="flex flex-col h-full p-6 rounded-3xl">
                   <div className="mb-4 flex items-start justify-between">
                     <div>
-                      <h3 className="text-xl font-bold text-white group-hover:text-cyber-blue transition-colors duration-300">
+                      <h3 className="text-xl font-bold transition-colors duration-300" style={textStrong}>
                         {project.title}
                       </h3>
                       <span className="text-xs text-cyber-blue font-mono mt-1 block">
@@ -85,7 +87,7 @@ const Projects = () => {
                     </div>
                   </div>
 
-                  <p className="text-gray-400 text-sm mb-6 flex-grow leading-relaxed">
+                  <p className="text-sm mb-6 flex-grow leading-relaxed" style={textPrimary}>
                     {project.description}
                   </p>
 

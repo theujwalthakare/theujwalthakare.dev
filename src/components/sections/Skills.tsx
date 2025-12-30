@@ -15,6 +15,8 @@ const Skills = () => {
   const [activeCategory, setActiveCategory] = useState('all');
   const [hoveredSkill, setHoveredSkill] = useState<SkillNode | null>(null);
   const play = useSound();
+  const textPrimary = { color: 'var(--text-primary)' };
+  const textStrong = { color: 'var(--text-strong)' };
 
   const filteredSkills = useMemo(() => {
     if (activeCategory === 'all') return SKILLS;
@@ -22,14 +24,14 @@ const Skills = () => {
   }, [activeCategory]);
 
   return (
-    <section id="skills" className="py-24 relative overflow-hidden min-h-screen flex flex-col justify-center">
+    <section id="skills" className="py-24 relative overflow-hidden min-h-screen flex flex-col justify-center" style={{ backgroundColor: 'var(--bg-body)' }}>
 
       {/* Background Decor */}
       <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-10 pointer-events-none"></div>
 
       <div className="container mx-auto px-4 z-10">
         <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-dystopian mb-6 text-white tracking-wider">
+          <h2 className="text-4xl md:text-5xl font-dystopian mb-6 tracking-wider" style={textStrong}>
             <DecryptedText text="SKILL_MATRIX" />
           </h2>
           <div className="flex flex-wrap justify-center gap-4 mb-12">
@@ -42,7 +44,7 @@ const Skills = () => {
                 }}
                 className={`px-6 py-2 border font-mono text-sm transition-all duration-300 relative overflow-hidden group ${activeCategory === cat.id
                   ? 'border-cyber-blue bg-cyber-blue/10 text-cyber-blue shadow-[0_0_15px_rgba(0,240,255,0.3)]'
-                  : 'border-white/10 text-gray-400 hover:border-cyber-blue/50 hover:text-white'
+                  : 'border-[color:var(--panel-border)] text-[color:var(--text-primary)]/70 hover:border-cyber-blue/50 hover:text-cyber-blue'
                   }`}
               >
                 <div className={`absolute inset-0 bg-cyber-blue/10 transform -translate-x-full transition-transform duration-300 ${activeCategory === cat.id ? 'translate-x-0' : 'group-hover:translate-x-0'}`}></div>
@@ -68,6 +70,7 @@ const Skills = () => {
                   skill={skill}
                   onHover={setHoveredSkill}
                   onLeave={() => setHoveredSkill(null)}
+                  textPrimary={textPrimary}
                 />
               ))}
             </AnimatePresence>
@@ -88,8 +91,8 @@ const Skills = () => {
                 <hoveredSkill.icon className="text-2xl text-cyber-pink" />
                 <span className="font-dystopian text-lg">{hoveredSkill.name}</span>
               </div>
-              <div className="space-y-2 font-mono text-xs">
-                <div className="flex justify-between text-gray-400">
+              <div className="space-y-2 font-mono text-xs" style={textPrimary}>
+                <div className="flex justify-between" style={{ color: 'var(--text-primary)', opacity: 0.8 }}>
                   <span>PROFICIENCY</span>
                   <span className="text-cyber-blue">{hoveredSkill.level}%</span>
                 </div>
@@ -100,9 +103,9 @@ const Skills = () => {
                     className="h-full bg-gradient-to-r from-cyber-blue to-cyber-pink"
                   />
                 </div>
-                <div className="flex justify-between text-gray-400 pt-2">
+                <div className="flex justify-between pt-2" style={{ color: 'var(--text-primary)', opacity: 0.8 }}>
                   <span>CATEGORY</span>
-                  <span className="uppercase text-white">{hoveredSkill.category}</span>
+                  <span className="uppercase" style={textStrong}>{hoveredSkill.category}</span>
                 </div>
               </div>
             </motion.div>
@@ -114,7 +117,7 @@ const Skills = () => {
   );
 };
 
-const HexNode = ({ skill, onHover, onLeave }: { skill: SkillNode, onHover: (s: SkillNode) => void, onLeave: () => void }) => {
+const HexNode = ({ skill, onHover, onLeave, textPrimary }: { skill: SkillNode, onHover: (s: SkillNode) => void, onLeave: () => void, textPrimary: React.CSSProperties }) => {
   const play = useSound();
   return (
     <motion.div
@@ -138,7 +141,7 @@ const HexNode = ({ skill, onHover, onLeave }: { skill: SkillNode, onHover: (s: S
         }}
       >
         {/* Inner Content */}
-        <div className="absolute inset-0 flex flex-col items-center justify-center text-gray-300 group-hover:text-white transition-colors">
+        <div className="absolute inset-0 flex flex-col items-center justify-center transition-colors" style={textPrimary}>
           <skill.icon className="text-3xl md:text-4xl mb-2 group-hover:scale-110 transition-transform duration-300 group-hover:text-cyber-blue" />
           <span className="text-[10px] md:text-xs font-mono tracking-widest bg-black/50 px-2 rounded">
             {skill.name}

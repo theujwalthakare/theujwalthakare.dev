@@ -2,6 +2,7 @@ import './App.css';
 import { Route, Routes } from 'react-router-dom';
 import Layout from './components/layout/Layout';
 import HomePage from './pages/HomePage';
+import AboutPage from './pages/AboutPage';
 import BlogsPage from './pages/BlogsPage';
 import BlogDetailPage from './pages/BlogDetailPage';
 import CaseStudiesPage from './pages/CaseStudiesPage';
@@ -14,6 +15,7 @@ function App() {
     <Routes>
       <Route element={<Layout />}>
         <Route index element={<HomePage />} />
+        <Route path="about" element={<AboutPage />} />
         <Route path="blogs" element={<BlogsPage />} />
         <Route path="logs" element={<LogArchive />} />
         <Route path="blogs/:slug" element={<BlogDetailPage />} />

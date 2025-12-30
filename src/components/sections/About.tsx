@@ -1,58 +1,98 @@
 import DecryptedText from "../ui/DecryptedText";
 
 const About = () => {
+  const panelSurface = { background: 'var(--panel-bg)', border: '1px solid var(--panel-border)', boxShadow: 'var(--panel-glow)' };
+  const textPrimary = { color: 'var(--text-primary)' };
+  const textStrong = { color: 'var(--text-strong)' };
+
   return (
-    <section id="about" className="py-20 relative">
-      <div className="container mx-auto px-4">
-        <div className="flex flex-col md:flex-row items-center gap-12">
-          {/* Profile Image */}
-          <div className="w-full md:w-1/3 mb-8 md:mb-0">
-            <div className="cyber-border p-1 max-w-sm mx-auto">
-              <div className="relative overflow-hidden aspect-square">
-                {/* Replace with your actual image */}
-                <div className="w-full h-full  bg-gradient-to-br from-cyber-blue/20 to-cyber-pink/30 flex items-center">
-                  <img src="/images/profile.jpg" alt="Profile" />
+    <section id="about" className="relative overflow-hidden py-20" style={{ backgroundColor: 'var(--bg-body)' }}>
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(255,59,111,0.08),transparent_32%),radial-gradient(circle_at_80%_10%,rgba(255,77,136,0.08),transparent_30%)]" />
+
+      <div className="container relative mx-auto px-4">
+        <div className="mb-12 text-center space-y-3">
+          <p className="text-xs uppercase tracking-[0.32em] text-cyber-blue">About</p>
+          <h2 className="text-4xl md:text-5xl font-dystopian" style={textStrong}>
+            <DecryptedText text="Who I Am" speed={60} />
+          </h2>
+          <p className="mx-auto max-w-2xl text-sm" style={textPrimary}>
+            A security-conscious full-stack developer blending product sense with systems thinking. I love shipping polished interfaces,
+            reliable APIs, and resilient infra while keeping a curious eye on emerging tech.
+          </p>
+        </div>
+
+        <div className="grid gap-8 lg:grid-cols-[1.05fr_1.1fr] items-start">
+          <div className="relative overflow-hidden rounded-3xl p-6" style={panelSurface}>
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_25%_25%,rgba(255,59,111,0.12),transparent_40%)] opacity-80" />
+            <div className="relative flex flex-col gap-6">
+              <div className="cyber-border p-2 max-w-md">
+                <div className="relative overflow-hidden aspect-[4/3] rounded-xl">
+                  <div className="absolute inset-0 bg-gradient-to-br from-cyber-blue/20 via-transparent to-cyber-blue/10" />
+                  <img src="/images/profile.jpg" alt="Ujwal Thakare" className="h-full w-full object-cover" />
                 </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-3 text-sm">
+                {[
+                  { label: 'Based in', value: 'Pune, India' },
+                  { label: 'Availability', value: 'Open to Remote' },
+                  { label: 'Focus', value: 'Full Stack, Security' },
+                  { label: 'Interests', value: 'AI/ML, Cyber Defense' },
+                ].map((item) => (
+                  <div
+                    key={item.label}
+                    className="rounded-xl px-3 py-3 text-left"
+                    style={panelSurface}
+                  >
+                    <p className="text-[11px] uppercase tracking-[0.14em]" style={{ color: 'var(--text-primary)', opacity: 0.8 }}>{item.label}</p>
+                    <p className="font-semibold" style={textStrong}>{item.value}</p>
+                  </div>
+                ))}
+              </div>
+
+              <div className="flex flex-wrap gap-2 text-[11px] uppercase tracking-[0.14em] text-cyber-blue">
+                {['TypeScript', 'React', 'Node.js', 'Python', 'PostgreSQL', 'MongoDB', 'Tailwind', 'OWASP']
+                  .map((pill) => (
+                    <span
+                      key={pill}
+                      className="rounded-full border border-cyber-blue/30 bg-cyber-blue/10 px-3 py-1 text-xs font-semibold text-cyber-blue"
+                    >
+                      {pill}
+                    </span>
+                  ))}
               </div>
             </div>
           </div>
 
-          {/* About Content */}
-          <div className="w-full md:w-2/3">
-            <div className="text-center mb-16">
-              <h2 className="text-3xl md:text-4xl font-dystopian mb-4 text-cyber-blue">
-                <DecryptedText text="ABOUT ME" speed={70} />
-              </h2>
-              <div className="h-1 w-24 bg-cyber-pink mx-auto"></div>
+          <div className="space-y-6">
+            <div className="rounded-3xl p-6" style={panelSurface}>
+              <h3 className="text-lg font-cyber text-cyber-blue mb-3">What I do</h3>
+              <p className="leading-relaxed" style={textPrimary}>
+                I design and build full-stack experiences—clean UI, accessible flows, and dependable APIs. I care about performance,
+                security-by-default, and developer ergonomics. On the back-end, I focus on well-modeled data, observability, and sensible automation.
+              </p>
             </div>
 
-            <p className="text-gray-300 mb-6">
-              Hello! I'm Ujwal Thakare, a passionate Software Developer with expertise in building modern web applications.
-              I specialize in creating responsive, user-friendly interfaces and robust backend systems.
-            </p>
+            <div className="rounded-3xl p-6" style={panelSurface}>
+              <h3 className="text-lg font-cyber text-cyber-blue mb-4">Recent highlights</h3>
+              <ul className="space-y-3 text-sm" style={textPrimary}>
+                <li className="flex gap-3"><span className="mt-1 h-1.5 w-1.5 rounded-full bg-cyber-blue" />Built AI-assisted portfolio interactions and hardened them with graceful fallbacks for speech APIs.</li>
+                <li className="flex gap-3"><span className="mt-1 h-1.5 w-1.5 rounded-full bg-cyber-blue" />Shipped dashboards and full-stack mini-projects with Python, React, and secure API gateways.</li>
+                <li className="flex gap-3"><span className="mt-1 h-1.5 w-1.5 rounded-full bg-cyber-blue" />Practiced threat-aware development using OWASP drills, auth hardening, and code review checklists.</li>
+              </ul>
+            </div>
 
-            <p className="text-gray-300 mb-6">
-              With a background in Computer Science, I bring a unique perspective to every project.
-              I'm constantly learning and exploring new technologies to stay at the cutting edge of web development.
-            </p>
-
-            <p className="text-gray-300 mb-8">
-              When I'm not coding, you can find me hiking, reading or exploring trends in cybersecurity world. I believe that these diverse interests
-              help fuel my creativity and problem-solving abilities in my technical work.
-            </p>
-
-            <div className="flex flex-wrap gap-4">
-              <div className="cyber-card flex-1 min-w-[200px]">
-                <h3 className="text-cyber-blue font-cyber text-lg mb-2">Education</h3>
-                <p className="text-gray-400">Bachelor of Science in Computer Science</p>
-                <p className="text-gray-500 text-sm">Savitribai Phule Pune University, 2025</p>
-              </div>
-
-              <div className="cyber-card flex-1 min-w-[200px]">
-                <h3 className="text-cyber-blue font-cyber text-lg mb-2">Location</h3>
-                <p className="text-gray-400">Pune, India</p>
-                <p className="text-gray-500 text-sm">Open to Remote Work</p>
-              </div>
+            <div className="grid gap-4 sm:grid-cols-3">
+              {[{ label: 'Years Learning', value: '3+' }, { label: 'Projects', value: '15+' }, { label: 'Domains', value: 'Web · AI · Security' }].map((stat) => (
+                <div
+                  key={stat.label}
+                  className="rounded-2xl px-4 py-5 text-center"
+                  style={panelSurface}
+                >
+                  <p className="text-2xl font-cyber" style={textStrong}>{stat.value}</p>
+                  <p className="text-[11px] uppercase tracking-[0.16em] mt-1" style={{ color: 'var(--text-primary)', opacity: 0.8 }}>{stat.label}</p>
+                </div>
+              ))}
             </div>
           </div>
         </div>
