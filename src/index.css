@@ -24,20 +24,12 @@
   scroll-behavior: smooth;
 }
 
-[data-theme='light'] {
-  --bg-body: #f8fafc;
-  --bg-grid-line: rgba(255, 59, 111, 0.08);
-  --text-primary: #1e293b;
-  --text-strong: #0f172a;
-  --panel-bg: rgba(248, 250, 252, 0.95);
-  --panel-border: rgba(15, 23, 42, 0.12);
-  --panel-glow: 0 12px 40px rgba(15, 23, 42, 0.08);
-  --panel-bg-shade: rgba(240, 245, 250, 0.9);
-  --panel-bg-lighter: rgba(235, 242, 250, 0.8);
-  --color-scheme: light;
-}
 
 @layer base {
+  * {
+    font-size: 16px;
+  }
+
   body {
     @apply font-mono transition-colors duration-300 relative;
     margin: 0;
@@ -49,8 +41,12 @@
     background-image:
       linear-gradient(var(--bg-grid-line) 1px, transparent 1px),
       linear-gradient(90deg, var(--bg-grid-line) 1px, transparent 1px);
-    background-size: 50px 50px;
+    background-size: 40px 40px;
     color-scheme: var(--color-scheme);
+  }
+
+  .container {
+    max-width: 1140px !important;
   }
 
   body::after {
@@ -65,11 +61,11 @@
   }
 
   section {
-    @apply py-16 md:py-20;
+    @apply py-12 md:py-16;
   }
 
   h2 {
-    @apply text-3xl md:text-4xl font-bold text-center mb-12;
+    @apply text-2xl md:text-3xl font-bold text-center mb-10;
     color: var(--text-strong);
   }
 }

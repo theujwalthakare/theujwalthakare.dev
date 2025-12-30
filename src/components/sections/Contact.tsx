@@ -49,17 +49,17 @@ const Contact = () => {
   };
 
   return (
-    <section id="contact" className="py-24 relative overflow-hidden min-h-screen flex items-center" style={{ backgroundColor: 'var(--bg-body)' }}>
+    <section id="contact" className="py-16 relative overflow-hidden min-h-screen flex items-center" style={{ backgroundColor: 'var(--bg-body)' }}>
       {/* Matrix Rain / Grid Overlay */}
       <div className="absolute inset-0 bg-[length:30px_30px] opacity-25 pointer-events-none" style={{ backgroundImage: 'linear-gradient(var(--bg-grid-line) 1px, transparent 1px), linear-gradient(90deg, var(--bg-grid-line) 1px, transparent 1px)' }}></div>
 
       <div className="container mx-auto px-4 relative z-10 w-full max-w-5xl">
-        <div className="grid md:grid-cols-2 gap-12 items-center">
+        <div className="grid md:grid-cols-2 gap-8 items-center">
 
           {/* Left: Info Terminal */}
-          <div className="space-y-8">
+          <div className="space-y-6">
             <div>
-              <h2 className="text-4xl md:text-5xl font-dystopian mb-2" style={textStrong}>
+              <h2 className="text-2xl md:text-3xl font-dystopian mb-2" style={textStrong}>
                 <DecryptedText text="ENCRYPTED COMMS" />
               </h2>
               <div className="h-1 w-24 bg-cyber-pink"></div>
@@ -70,7 +70,7 @@ const Contact = () => {
               All transmissions are protected by end-to-end quantum encryption.
             </p>
 
-            <div className="p-6 font-mono text-xs rounded-lg relative overflow-hidden group" style={panelSurface}>
+            <div className="p-5 font-mono text-xs rounded-lg relative overflow-hidden group" style={panelSurface}>
               <div className="absolute top-0 right-0 p-2 opacity-50"><FaLock /></div>
               <div className="space-y-4">
                 <div className="flex items-center gap-3">

@@ -27,7 +27,7 @@ const CyberNet = (props: any) => {
       <Points ref={ref} positions={sphere} stride={3} frustumCulled={false} {...props}>
         <PointMaterial
           transparent
-          color="#00f3ff" // Cyber Blue
+          color="#00e5ffb9" // Cyber Blue
           size={0.002}
           sizeAttenuation={true}
           depthWrite={false}
@@ -104,36 +104,36 @@ const Hero = () => {
               transition={{ duration: 1 }}
               className="lg:col-span-5 flex flex-col items-center lg:items-start"
             >
-              <div className="relative group mb-8">
+              <div className="relative group mb-6">
                 {/* Rotating Ring */}
-                <div className="absolute -inset-4 rounded-full border border-cyber-blue/30 border-dashed animate-spin-slow opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+                <div className="absolute -inset-3 rounded-full border border-cyber-blue/30 border-dashed animate-spin-slow opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
                 <div className="absolute -inset-1 rounded-full bg-gradient-to-r from-cyber-blue to-cyber-pink blur opacity-30 group-hover:opacity-60 transition duration-500"></div>
                 
-                  <div className="relative w-40 h-40 rounded-full overflow-hidden border-2 border-cyber-blue/50" style={{ background: 'var(--panel-bg)', borderColor: 'var(--panel-border)' }}>
+                  <div className="relative w-28 h-28 rounded-full overflow-hidden border-2 border-cyber-blue/50" style={{ background: 'var(--panel-bg)', borderColor: 'var(--panel-border)' }}>
                     <img src="/images/profile.jpg" alt="Profile" className="w-full h-full object-cover opacity-90 hover:opacity-100 transition-opacity" />
                     {/* Glitch Scanline Overlay */}
                     <div className="absolute inset-0 bg-scanline pointer-events-none opacity-20"></div>
                    </div>
                 
-                   <div className="absolute bottom-0 right-0" style={panelSurface}>
-                     <FaShieldAlt className="text-xl text-cyber-blue" />
+                   <div className="absolute bottom-0 right-0 p-1.5" style={panelSurface}>
+                     <FaShieldAlt className="text-sm text-cyber-blue" />
                    </div>
               </div>
 
-                  <h1 className="text-5xl md:text-7xl font-bold font-dystopian tracking-tighter mb-4 text-center lg:text-left" style={textStrong}>
-                 <span className="block text-xl font-mono text-cyber-pink mb-2 tracking-widest">OPERATIVE:</span>
-                 <DecryptedText text="UJWAL THAKARE" speed={30} />
+                  <h1 className="text-3xl md:text-4xl font-bold font-dystopian tracking-tighter mb-3 text-center lg:text-left" style={textStrong}>
+                 <span className="block text-sm font-mono text-cyber-pink mb-1.5 tracking-widest">OPERATIVE:</span>
+                 <DecryptedText className='text-4xl' text="UJWAL THAKARE" speed={30} />
               </h1>
 
-              <div className="flex flex-wrap justify-center lg:justify-start gap-3 mb-8">
+              <div className="flex flex-wrap justify-center lg:justify-start gap-2 mb-6">
                  {['Penetration Testing', 'Full Stack', 'Cloud Sec'].map((tag, i) => (
-                    <span key={i} className="px-3 py-1 bg-cyber-blue/10 border border-cyber-blue/30 text-cyber-blue text-xs font-mono rounded tracking-wider uppercase">
+                    <span key={i} className="px-2.5 py-0.5 bg-cyber-blue/10 border border-cyber-blue/30 text-cyber-blue text-xs font-mono rounded tracking-wider uppercase">
                       {tag}
                     </span>
                  ))}
               </div>
 
-              <div className="flex gap-4">
+              <div className="flex gap-3">
                 <SocialButton icon={FaGithub} href="https://github.com/theujwalthakare" delay={0.1} />
                 <SocialButton icon={FaLinkedin} href="https://linkedin.com/in/theujwalthakare" delay={0.2} />
                 <SocialButton icon={FaTwitter} href="https://twitter.com" delay={0.3} />
@@ -162,7 +162,7 @@ const Hero = () => {
                 </div>
 
                 {/* Terminal Body */}
-                <div className="p-6 font-mono text-sm h-[300px] flex flex-col justify-between" style={textPrimary}>
+                <div className="p-5 font-mono text-sm h-[240px] flex flex-col justify-between" style={textPrimary}>
                   <div className="space-y-2">
                     {logs.map((log, i) => (
                       <div key={i} className="text-cyber-blue/80">
@@ -182,13 +182,14 @@ const Hero = () => {
                        </motion.div>
                     )}
                   </div>
+                  <br /><br />
 
                   <div className="flex items-center gap-2 text-cyber-pink mt-4 animate-pulse">
                     <span className="text-xs">AWAITING INPUT</span>
                     <span className="w-2 h-4 bg-cyber-pink block"></span>
                   </div>
                 </div>
-              
+              <br /><br /><b></b>
                 {/* Action Footer */}
                 <div className="p-4 border-t flex flex-wrap gap-4 items-center justify-between" style={{ borderColor: 'var(--panel-border)', background: 'var(--panel-bg-shade)' }}>
                    <div className="flex gap-4">
@@ -225,10 +226,10 @@ const SocialButton = ({ icon: Icon, href, delay }: { icon: any, href: string, de
     initial={{ opacity: 0, y: 10 }}
     animate={{ opacity: 1, y: 0 }}
     transition={{ delay: 1 + delay }}
-    className="w-12 h-12 flex items-center justify-center rounded-lg transition-all duration-300 hover:scale-110 border"
+    className="w-10 h-10 flex items-center justify-center rounded-lg transition-all duration-300 hover:scale-110 border"
     style={{ borderColor: 'var(--panel-border)', background: 'var(--panel-bg-lighter)', color: 'var(--text-primary)' }}
   >
-    <Icon className="text-lg" />
+    <Icon className="text-base" />
   </motion.a>
 );
 

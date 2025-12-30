@@ -76,10 +76,8 @@ const Navbar = () => {
 
         {/* Left: Brand & Status */}
         <div className="flex items-center gap-4">
-          <div className="text-xl font-bold font-cyber text-cyber-blue tracking-wider">
-            UJWAL.DEV <span className="text-xs align-top opacity-70">v2.0</span>
-          </div>
-          <div className="hidden md:flex items-center gap-2 text-xs font-mono text-cyber-blue/60 border-l border-cyber-blue/30 pl-4">
+         
+          <div className="hidden md:flex items-center gap-3 text-xs font-mono text-cyber-blue/60 border-l border-cyber-blue/30 pl-4">
             <span className="flex items-center gap-1">
               <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
               SYSTEM ONLINE
@@ -108,8 +106,8 @@ const Navbar = () => {
         {/* Right: HUD Data */}
         <div className="hidden md:flex items-center gap-6 font-mono text-xs text-cyber-blue/80">
           <div className="flex flex-col items-end leading-tight">
-            <span>PUNE, IN</span>
-            <span className="opacity-50">21.1458° N, 79.0882° E</span>
+            <span>NASHIK, IN</span>
+            <span className="opacity-50">19.9993° N, 73.7900° E</span>
           </div>
           <div className="h-8 w-px bg-cyber-blue/20"></div>
           <div className="flex flex-col items-end leading-tight min-w-[80px]">
@@ -119,14 +117,7 @@ const Navbar = () => {
           <div className="flex items-center gap-3 text-cyber-blue">
             <FaWifi title="Connection Stable" />
             <FaBatteryFull title="Power Optimal" />
-            <button
-              onClick={toggleTheme}
-              onMouseEnter={() => play('hover')}
-              className="ml-2 px-3 py-1 rounded-full border border-cyber-blue/30 bg-cyber-blue/10 text-[11px] tracking-widest hover:bg-cyber-blue/20 transition-colors"
-              aria-label="Toggle theme"
-            >
-              {theme === 'dark' ? 'LIGHT' : 'DARK'} MODE
-            </button>
+            
           </div>
         </div>
 
@@ -159,15 +150,7 @@ const Navbar = () => {
                 {item.name}
               </button>
             ))}
-            <button
-              onClick={() => {
-                toggleTheme();
-                setIsOpen(false);
-              }}
-              className="mt-2 p-3 text-left border-l-2 border-cyber-blue/30 bg-cyber-blue/5 text-cyber-blue font-mono hover:border-cyber-blue hover:bg-cyber-blue/10 transition-all"
-            >
-              SWITCH TO {theme === 'dark' ? 'LIGHT' : 'DARK'} MODE
-            </button>
+            
             <div className="mt-4 pt-4 border-t border-white/10 flex justify-between text-xs font-mono text-gray-500">
               <span>SYSTEM STATUS: NORMAL</span>
               <span>{time.toLocaleTimeString()}</span>

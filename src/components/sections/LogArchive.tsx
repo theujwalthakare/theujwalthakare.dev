@@ -58,7 +58,7 @@ const LogArchive = () => {
             <div className="container mx-auto px-4 max-w-4xl relative z-10">
 
                 <div className="text-center mb-16">
-                    <h2 className="text-4xl md:text-5xl font-dystopian mb-4 text-white">
+                    <h2 className="text-2xl md:text-3xl font-dystopian mb-4 text-white">
                         <DecryptedText text="CAPTAIN'S LOG" />
                     </h2>
                     <div className="h-0.5 w-16 bg-cyber-pink mx-auto"></div>

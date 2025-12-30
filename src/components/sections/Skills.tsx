@@ -31,10 +31,10 @@ const Skills = () => {
 
       <div className="container mx-auto px-4 z-10">
         <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-dystopian mb-6 tracking-wider" style={textStrong}>
+          <h2 className="text-2xl md:text-3xl font-dystopian mb-6 tracking-wider" style={textStrong}>
             <DecryptedText text="SKILL_MATRIX" />
           </h2>
-          <div className="flex flex-wrap justify-center gap-4 mb-12">
+          <div className="flex flex-wrap justify-center gap-3 mb-10">
             {SKILL_CATEGORIES.map((cat) => (
               <button
                 key={cat.id}
@@ -42,7 +42,7 @@ const Skills = () => {
                   play('click');
                   setActiveCategory(cat.id);
                 }}
-                className={`px-6 py-2 border font-mono text-sm transition-all duration-300 relative overflow-hidden group ${activeCategory === cat.id
+                className={`px-5 py-2 border font-mono text-sm transition-all duration-300 relative overflow-hidden group ${activeCategory === cat.id
                   ? 'border-cyber-blue bg-cyber-blue/10 text-cyber-blue shadow-[0_0_15px_rgba(0,240,255,0.3)]'
                   : 'border-[color:var(--panel-border)] text-[color:var(--text-primary)]/70 hover:border-cyber-blue/50 hover:text-cyber-blue'
                   }`}
@@ -61,7 +61,7 @@ const Skills = () => {
         <div className="flex flex-wrapjustify-center max-w-6xl mx-auto relative min-h-[400px]">
           <motion.div
             layout
-            className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-4 md:gap-8 max-w-4xl mx-auto"
+            className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-3 md:gap-5 max-w-4xl mx-auto"
           >
             <AnimatePresence mode="popLayout">
               {filteredSkills.map((skill) => (

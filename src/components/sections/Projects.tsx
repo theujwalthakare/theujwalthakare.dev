@@ -20,7 +20,7 @@ const Projects = () => {
     <section id="projects" className="py-20 relative" style={{ backgroundColor: 'var(--bg-body)' }}>
       <div className="container mx-auto px-4">
         <div className="text-center mb-12">
-          <h2 className="text-4xl md:text-5xl font-dystopian mb-6" style={textStrong}>
+          <h2 className="text-2xl md:text-3xl font-dystopian mb-6" style={textStrong}>
             <DecryptedText text="FEATURED PROJECTS" />
           </h2>
           <div className="h-1 w-24 bg-cyber-blue mx-auto mb-8"></div>
@@ -51,21 +51,21 @@ const Projects = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 rounded-3xl"
+            className="grid gap-5 md:grid-cols-2 lg:grid-cols-3"
           >
             {filteredProjects.map((project) => (
               <HolographicCard key={project.title}>
-                <div className="flex flex-col h-full p-6 rounded-3xl">
-                  <div className="mb-4 flex items-start justify-between">
+                <div className="flex flex-col h-full p-5 rounded-xl">
+                  <div className="mb-3 flex items-start justify-between">
                     <div>
-                      <h3 className="text-xl font-bold transition-colors duration-300" style={textStrong}>
+                      <h3 className="text-lg font-bold transition-colors duration-300" style={textStrong}>
                         {project.title}
                       </h3>
                       <span className="text-xs text-cyber-blue font-mono mt-1 block">
                         {project.category} // {project.technologies.slice(0, 2).join(', ')}
                       </span>
                     </div>
-                    <div className="flex gap-3">
+                    <div className="flex gap-2">
                       <a
                         href={project.github}
                         target="_blank"
@@ -73,7 +73,7 @@ const Projects = () => {
                         className="text-gray-400 hover:text-white transition-colors"
                         title="View Code"
                       >
-                        <FaGithub size={20} />
+                        <FaGithub size={18} />
                       </a>
                       <a
                         href={project.demo}
@@ -82,12 +82,12 @@ const Projects = () => {
                         className="text-gray-400 hover:text-cyber-blue transition-colors"
                         title="Live Demo"
                       >
-                        <FaExternalLinkAlt size={20} />
+                        <FaExternalLinkAlt size={18} />
                       </a>
                     </div>
                   </div>
 
-                  <p className="text-sm mb-6 flex-grow leading-relaxed" style={textPrimary}>
+                  <p className="text-sm mb-4 flex-grow leading-relaxed" style={textPrimary}>
                     {project.description}
                   </p>
 
@@ -95,7 +95,7 @@ const Projects = () => {
                     {project.technologies.map((tech) => (
                       <span
                         key={tech}
-                        className="rounded-full bg-cyber-blue/10 px-3 py-1 text-xs text-cyber-blue border border-cyber-blue/20"
+                        className="rounded-full bg-cyber-blue/10 px-2.5 py-0.5 text-xs text-cyber-blue border border-cyber-blue/20"
                       >
                         {tech}
                       </span>

@@ -11,8 +11,8 @@ const About = () => {
 
       <div className="container relative mx-auto px-4">
         <div className="mb-12 text-center space-y-3">
-          <p className="text-xs uppercase tracking-[0.32em] text-cyber-blue">About</p>
-          <h2 className="text-4xl md:text-5xl font-dystopian" style={textStrong}>
+          <p className="text-xl uppercase tracking-[0.32em] text-cyber-blue">About</p>
+          <h2 className="text-3xl md:text-3xl font-dystopian" style={textStrong}>
             <DecryptedText text="Who I Am" speed={60} />
           </h2>
           <p className="mx-auto max-w-2xl text-sm" style={textPrimary}>
@@ -21,23 +21,23 @@ const About = () => {
           </p>
         </div>
 
-        <div className="grid gap-8 lg:grid-cols-[1.05fr_1.1fr] items-start">
-          <div className="relative overflow-hidden rounded-3xl p-6" style={panelSurface}>
+        <div className="grid gap-6 lg:grid-cols-[1.05fr_1.1fr] items-start">
+          <div className="relative overflow-hidden rounded-xl p-5" style={panelSurface}>
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_25%_25%,rgba(255,59,111,0.12),transparent_40%)] opacity-80" />
-            <div className="relative flex flex-col gap-6">
+            <div className="relative flex flex-col gap-5">
               <div className="cyber-border p-2 max-w-md">
-                <div className="relative overflow-hidden aspect-[4/3] rounded-xl">
+                <div className="relative overflow-hidden aspect-[3/3] rounded-xl">
                   <div className="absolute inset-0 bg-gradient-to-br from-cyber-blue/20 via-transparent to-cyber-blue/10" />
                   <img src="/images/profile.jpg" alt="Ujwal Thakare" className="h-full w-full object-cover" />
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-3 text-sm">
+              <div className="grid grid-cols-2 gap-2 text-sm">
                 {[
-                  { label: 'Based in', value: 'Pune, India' },
+                  { label: 'Based in', value: 'Nashik, India' },
                   { label: 'Availability', value: 'Open to Remote' },
-                  { label: 'Focus', value: 'Full Stack, Security' },
-                  { label: 'Interests', value: 'AI/ML, Cyber Defense' },
+                  { label: 'Focus', value: 'Full Stack, CyDevOps' },
+                  { label: 'Interests', value: 'AI/ML, Cyber Security' },
                 ].map((item) => (
                   <div
                     key={item.label}
@@ -64,8 +64,8 @@ const About = () => {
             </div>
           </div>
 
-          <div className="space-y-6">
-            <div className="rounded-3xl p-6" style={panelSurface}>
+          <div className="space-y-5">
+            <div className="rounded-xl p-5" style={panelSurface}>
               <h3 className="text-lg font-cyber text-cyber-blue mb-3">What I do</h3>
               <p className="leading-relaxed" style={textPrimary}>
                 I design and build full-stack experiences—clean UI, accessible flows, and dependable APIs. I care about performance,
@@ -73,7 +73,7 @@ const About = () => {
               </p>
             </div>
 
-            <div className="rounded-3xl p-6" style={panelSurface}>
+            <div className="rounded-xl p-5" style={panelSurface}>
               <h3 className="text-lg font-cyber text-cyber-blue mb-4">Recent highlights</h3>
               <ul className="space-y-3 text-sm" style={textPrimary}>
                 <li className="flex gap-3"><span className="mt-1 h-1.5 w-1.5 rounded-full bg-cyber-blue" />Built AI-assisted portfolio interactions and hardened them with graceful fallbacks for speech APIs.</li>

@@ -78,28 +78,28 @@ const Experience = () => {
   const textStrong = { color: 'var(--text-strong)' };
 
   const renderTimeline = (items: TimelineItem[], label: string) => (
-    <div className="grid gap-6 max-w-5xl mx-auto">
+    <div className="grid gap-5 max-w-5xl mx-auto">
       {items.map((item, index) => (
         <article
           key={`${item.title}-${index}`}
-          className="group relative overflow-hidden rounded-2xl transition duration-300 hover:-translate-y-1"
+          className="group relative overflow-hidden rounded-xl transition duration-300 hover:-translate-y-1"
           style={panelSurface}
         >
           <div className="pointer-events-none absolute inset-0 opacity-0 transition duration-300 group-hover:opacity-100 bg-[radial-gradient(circle_at_20%_20%,rgba(0,240,255,0.12),transparent_35%),radial-gradient(circle_at_80%_0%,rgba(255,59,111,0.08),transparent_32%)]" />
-          <div className="absolute left-4 top-6 bottom-6 hidden w-px bg-cyber-blue/30 sm:block" />
-          <div className="absolute left-[14px] top-12 hidden h-3 w-3 rounded-full bg-cyber-blue/80 shadow-[0_0_14px_rgba(0,240,255,0.45)] sm:block" />
+          <div className="absolute left-4 top-5 bottom-5 hidden w-px bg-cyber-blue/30 sm:block" />
+          <div className="absolute left-[14px] top-10 hidden h-3 w-3 rounded-full bg-cyber-blue/80 shadow-[0_0_14px_rgba(0,240,255,0.45)] sm:block" />
 
-          <div className="relative flex flex-col gap-4 p-6 sm:pl-12">
+          <div className="relative flex flex-col gap-3 p-5 sm:pl-10">
             <div className="flex flex-wrap items-start justify-between gap-3">
               <div className="space-y-1" style={textPrimary}>
                 <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-cyber-blue">
                   <DecryptedText text={label} speed={40} />
                 </p>
-                <h3 className="text-xl font-cyber" style={textStrong}>{item.title}</h3>
+                <h3 className="text-lg font-cyber" style={textStrong}>{item.title}</h3>
                 <p className="text-sm" style={{ color: 'var(--text-primary)', opacity: 0.8 }}>{item.subtitle}</p>
               </div>
               <div className="flex flex-col items-end gap-2 text-right">
-                <span className="rounded-full border border-cyber-blue/30 px-3 py-1 text-xs font-medium text-cyber-blue/90">
+                <span className="rounded-full border border-cyber-blue/30 px-2.5 py-0.5 text-xs font-medium text-cyber-blue/90">
                   {item.period}
                 </span>
                 {item.location && <span className="text-xs text-gray-400">{item.location}</span>}
@@ -120,7 +120,7 @@ const Experience = () => {
                 {item.skills.map((skill) => (
                   <span
                     key={`${item.title}-${skill}`}
-                    className="rounded-full border border-cyber-blue/30 bg-cyber-blue/5 px-3 py-1 text-xs font-semibold uppercase tracking-[0.1em] text-cyber-blue"
+                    className="rounded-full border border-cyber-blue/30 bg-cyber-blue/5 px-2.5 py-0.5 text-xs font-semibold uppercase tracking-[0.1em] text-cyber-blue"
                   >
                     {skill}
                   </span>
@@ -139,7 +139,7 @@ const Experience = () => {
       <div className="container relative mx-auto px-4">
         <div className="mb-12 space-y-3 text-center">
           <p className="text-xs uppercase tracking-[0.35em] text-cyber-blue">Trajectory</p>
-          <h2 className="text-4xl md:text-5xl font-dystopian" style={textStrong}>
+          <h2 className="text-2xl md:text-3xl font-dystopian" style={textStrong}>
             <DecryptedText text="Experience & Education" speed={48} />
           </h2>
           <p className="mx-auto max-w-2xl text-sm" style={textPrimary}>
