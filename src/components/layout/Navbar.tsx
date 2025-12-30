@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { FaBars, FaTimes, FaWifi, FaBatteryFull } from 'react-icons/fa';
 
@@ -9,12 +9,7 @@ const Navbar = () => {
   const play = useSound();
   const [time, setTime] = useState(new Date());
   const [scrolled, setScrolled] = useState(false);
-  const prefersDark = useMemo(() => window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches, []);
-  const [theme, setTheme] = useState<'dark' | 'light'>(() => {
-    const stored = localStorage.getItem('theme');
-    if (stored === 'light' || stored === 'dark') return stored;
-    return prefersDark ? 'dark' : 'light';
-  });
+
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -32,18 +27,6 @@ const Navbar = () => {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
-
-  // Theme sync
-  useEffect(() => {
-    document.documentElement.dataset.theme = theme;
-    localStorage.setItem('theme', theme);
-  }, [theme]);
-
-  const toggleTheme = () => {
-    const next = theme === 'dark' ? 'light' : 'dark';
-    setTheme(next);
-    play('click');
-  };
 
   const handleSectionClick = (hash: string) => {
     setIsOpen(false);
