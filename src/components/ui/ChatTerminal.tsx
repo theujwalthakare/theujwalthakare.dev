@@ -38,7 +38,7 @@ const ChatTerminal = () => {
                 onClick={() => { setIsOpen(!isOpen); play('click'); }}
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.95 }}
-                className={`fixed bottom-6 right-6 z-50 w-14 h-14 rounded-full flex items-center justify-center border-2 shadow-[0_0_20px_rgba(0,240,255,0.3)] transition-colors duration-300 ${isOpen ? 'bg-cyber-pink border-cyber-pink text-black' : 'bg-black/80 border-cyber-blue text-cyber-blue hover:bg-cyber-blue/20'
+                className={`fixed bottom-6 right-6 z-50 w-14 h-14 rounded-full flex items-center justify-center border-2 shadow-[0_0_20px_rgba(59,130,246,0.22)] transition-colors duration-300 ${isOpen ? 'bg-cyber-pink border-cyber-pink text-black' : 'chat-shell border-cyan text-cyan hover:bg-cyan/10'
                     }`}
             >
                 {isOpen ? <FaTimes size={20} /> : <FaRobot size={24} />}
@@ -51,10 +51,10 @@ const ChatTerminal = () => {
                         initial={{ opacity: 0, y: 50, scale: 0.9 }}
                         animate={{ opacity: 1, y: 0, scale: 1 }}
                         exit={{ opacity: 0, y: 50, scale: 0.9 }}
-                        className="fixed bottom-24 right-6 w-80 md:w-96 h-[450px] bg-black/90 backdrop-blur-md border border-cyber-blue/30 rounded-lg shadow-2xl z-50 flex flex-col overflow-hidden"
+                        className="chat-shell fixed bottom-24 right-6 z-50 flex h-[450px] w-80 flex-col overflow-hidden rounded-lg border border-cyan/30 shadow-2xl backdrop-blur-md md:w-96"
                     >
                         {/* Header */}
-                        <div className="bg-cyber-blue/10 p-3 border-b border-cyber-blue/30 flex items-center gap-2">
+                        <div className="chat-header flex items-center gap-2 border-b border-cyan/30 p-3">
                             <FaTerminal className="text-cyber-blue" />
                             <span className="font-mono text-xs text-cyber-blue tracking-widest">SYSTEM_AI_ASSISTANT_V1</span>
                         </div>
@@ -70,8 +70,8 @@ const ChatTerminal = () => {
                                 >
                                     <div
                                         className={`max-w-[85%] p-3 rounded text-xs leading-relaxed border ${msg.sender === 'user'
-                                                ? 'bg-cyber-blue/10 border-cyber-blue/30 text-white rounded-br-none'
-                                                : 'bg-gray-900 border-gray-700 text-cyber-green rounded-bl-none'
+                                            ? 'chat-msg-user border-cyan/30 rounded-br-none'
+                                            : 'chat-msg-bot border-gray-600/70 rounded-bl-none'
                                             }`}
                                     >
                                         {msg.sender === 'bot' && <span className="mr-2 opacity-50">{'>'}</span>}
@@ -83,18 +83,18 @@ const ChatTerminal = () => {
                         </div>
 
                         {/* Input Area */}
-                        <form onSubmit={handleSubmit} className="p-3 border-t border-cyber-blue/20 bg-black/50">
+                        <form onSubmit={handleSubmit} className="chat-footer border-t border-cyan/20 p-3">
                             <div className="relative flex items-center">
                                 <input
                                     type="text"
                                     value={inputValue}
                                     onChange={(e) => setInputValue(e.target.value)}
                                     placeholder="ENTER COMMAND..."
-                                    className="w-full bg-cyber-blue/5 border border-cyber-blue/30 rounded py-2 pl-3 pr-10 text-white font-mono text-xs focus:outline-none focus:border-cyber-blue transition-colors"
+                                    className="chat-input w-full rounded border border-cyan/30 py-2 pl-3 pr-10 font-mono text-xs transition-colors focus:border-cyan focus:outline-none"
                                 />
                                 <button
                                     type="submit"
-                                    className="absolute right-2 text-cyber-blue hover:text-white transition-colors"
+                                    className="absolute right-2 text-cyan transition-colors hover:text-[var(--text-strong)]"
                                 >
                                     <FaPaperPlane size={14} />
                                 </button>

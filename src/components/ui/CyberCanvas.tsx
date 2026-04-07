@@ -1,10 +1,13 @@
-import { useRef, useMemo } from "react";
+import { useRef, useMemo, type ComponentProps } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { Points, PointMaterial } from "@react-three/drei";
+import * as THREE from "three";
 import * as random from "maath/random/dist/maath-random.esm";
 
-const Stars = (props: any) => {
-    const ref = useRef<any>(null);
+type ParticleCloudProps = ComponentProps<typeof Points>;
+
+const Stars = (props: ParticleCloudProps) => {
+    const ref = useRef<THREE.Points | null>(null);
     const sphere = useMemo(() => {
         return random.inSphere(new Float32Array(8000), { radius: 1.8 }) as Float32Array;
     }, []);
@@ -32,8 +35,8 @@ const Stars = (props: any) => {
     );
 };
 
-const Nebula = (props: any) => {
-    const ref = useRef<any>(null);
+const Nebula = (props: ParticleCloudProps) => {
+    const ref = useRef<THREE.Points | null>(null);
     const sphere = useMemo(() => {
         return random.inSphere(new Float32Array(3000), { radius: 2.2 }) as Float32Array;
     }, []);

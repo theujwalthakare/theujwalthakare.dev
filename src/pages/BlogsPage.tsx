@@ -34,9 +34,9 @@ const BlogsPage = () => {
 
       <div className="relative overflow-hidden rounded-[3rem] border border-white/10 bg-white/[0.06] p-10 backdrop-blur-xl shadow-[0_0_70px_rgba(0,240,255,0.18)]">
         <header className="max-w-3xl space-y-6">
-          <p className="text-xs font-semibold uppercase tracking-[0.55em] text-cyber-blue/70">Knowledge Dispatches</p>
-          <h1 className="text-4xl font-bold leading-tight md:text-5xl">Strategy dossiers for builders and operators.</h1>
-          <p className="text-base text-white/70 md:text-lg">
+          <p className="about-typography-eyebrow text-xs text-cyber-blue/70">Knowledge Dispatches</p>
+          <h1 className="about-typography-title text-4xl leading-tight md:text-5xl">Strategy dossiers for builders and operators.</h1>
+          <p className="about-typography-copy text-base md:text-lg">
             Browse the latest write-ups across security, delivery, and knowledge systems. Each card holds the executive summary, maintainer, and
             a direct launch pad into the full breakdown.
           </p>
@@ -65,8 +65,8 @@ const BlogsPage = () => {
                   <span>{article.readingTime}</span>
                 </div>
                 <div className="space-y-3">
-                  <h2 className="text-2xl font-semibold text-white md:text-[1.65rem]">{article.title}</h2>
-                  <p className="text-sm text-white/70 md:text-base">{article.description}</p>
+                  <h2 className="about-typography-title text-2xl md:text-[1.65rem]">{article.title}</h2>
+                  <p className="about-typography-copy text-sm md:text-base">{article.description}</p>
                 </div>
                 <div className="flex flex-wrap gap-2 text-[11px] uppercase tracking-[0.3em] text-white/60">
                   {article.tags.map((tag) => (
@@ -113,8 +113,8 @@ const BlogsPage = () => {
         <section className="mt-16 rounded-3xl border border-white/10 bg-white/[0.04] p-8">
           <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
             <div className="max-w-xl space-y-2">
-              <h2 className="text-2xl font-semibold text-white md:text-[2rem]">Subject Navigator</h2>
-              <p className="text-sm text-white/70 md:text-base">
+              <h2 className="about-typography-title text-2xl md:text-[2rem]">Subject Navigator</h2>
+              <p className="about-typography-copy text-sm md:text-base">
                 Search by discipline and tap a subject to filter the grid above. Use the control to clear back to the full knowledge feed when
                 you are done exploring.
               </p>

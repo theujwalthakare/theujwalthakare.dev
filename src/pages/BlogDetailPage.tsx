@@ -20,8 +20,8 @@ const BlogDetailPage = () => {
           <p className="text-xs font-semibold uppercase tracking-[0.45em] text-white/60">
             {article.date} · {article.readingTime}
           </p>
-          <h1 className="text-4xl font-bold leading-tight md:text-5xl">{article.title}</h1>
-          <p className="max-w-3xl text-base text-white/75 md:text-lg">{article.description}</p>
+          <h1 className="about-typography-title text-4xl leading-tight md:text-5xl">{article.title}</h1>
+          <p className="about-typography-copy max-w-3xl text-base md:text-lg">{article.description}</p>
           <div className="flex flex-wrap gap-3">
             {article.tags.map((tag) => (
               <span
@@ -40,10 +40,10 @@ const BlogDetailPage = () => {
               key={section.heading ?? section.body[0]}
               className="space-y-5 rounded-2xl border border-white/10 bg-white/[0.05] p-6 md:p-8"
             >
-              {section.heading && <h2 className="text-2xl font-semibold text-white md:text-[2rem]">{section.heading}</h2>}
+              {section.heading && <h2 className="about-typography-title text-2xl md:text-[2rem]">{section.heading}</h2>}
 
               {section.body.map((paragraph, index) => (
-                <p key={index} className="leading-relaxed text-white/75">
+                <p key={index} className="about-typography-copy">
                   {paragraph}
                 </p>
               ))}

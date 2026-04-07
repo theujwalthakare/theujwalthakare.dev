@@ -1,223 +1,131 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { FaPaperPlane, FaLock, FaTerminal, FaCheckCircle } from 'react-icons/fa';
-import DecryptedText from '../ui/DecryptedText';
-
-import useSound from '../../hooks/useSound';
+import { FaEnvelope, FaGithub, FaLinkedin } from 'react-icons/fa6';
+import { SectionHeading } from '../ui/SectionHeading';
 
 const Contact = () => {
-  const [formData, setFormData] = useState({ name: '', email: '', message: '' });
-  const [status, setStatus] = useState<'idle' | 'encrypting' | 'sending' | 'success' | 'error'>('idle');
-  const [logs, setLogs] = useState<string[]>([]);
-  const play = useSound();
-  const panelSurface = { background: 'var(--panel-bg)', border: '1px solid var(--panel-border)', boxShadow: 'var(--panel-glow)' };
-  const textPrimary = { color: 'var(--text-primary)' };
-  const textStrong = { color: 'var(--text-strong)' };
+  const [copied, setCopied] = useState(false);
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [message, setMessage] = useState('');
+  const textStrong = { color: 'var(--text-strong, #f8fafc)' };
 
-  const addLog = (msg: string) => setLogs(prev => [...prev.slice(-4), `> ${msg}`]);
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+  const copyEmail = async () => {
+    await navigator.clipboard.writeText('thakare2829@gmail.com');
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!formData.name || !formData.email || !formData.message) return;
-
-    setStatus('encrypting');
-    addLog('INITIATING ENCRYPTION PROTOCOL...');
-
-    // Simulate encryption delay
-    setTimeout(() => {
-      addLog('ENCRYPTING PAYLOAD...');
-      setStatus('sending');
-
-      // Simulate network request
-      setTimeout(() => {
-        if (Math.random() > 0.1) {
-          setStatus('success');
-          play('success');
-          addLog('TRANSMISSION SUCCESSFUL.');
-          setFormData({ name: '', email: '', message: '' });
-        } else {
-          setStatus('error');
-          play('error');
-          addLog('TRANSMISSION FAILED: SIGNAL LOST.');
-        }
-      }, 2000);
-    }, 1500);
-  };
+  const mailtoHref = `mailto:thakare2829@gmail.com?subject=${encodeURIComponent(`Portfolio inquiry from ${name || 'visitor'}`)}&body=${encodeURIComponent(`Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`)}`;
 
   return (
-    <section id="contact" className="py-16 relative overflow-hidden min-h-screen flex items-center" style={{ backgroundColor: 'var(--bg-body)' }}>
-      {/* Matrix Rain / Grid Overlay */}
-      <div className="absolute inset-0 bg-[length:30px_30px] opacity-25 pointer-events-none" style={{ backgroundImage: 'linear-gradient(var(--bg-grid-line) 1px, transparent 1px), linear-gradient(90deg, var(--bg-grid-line) 1px, transparent 1px)' }}></div>
+    <section id="contact" className="relative overflow-hidden px-4 py-20 md:px-8 md:py-28">
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_16%_18%,rgba(59,130,246,0.15),transparent_40%),radial-gradient(circle_at_82%_12%,rgba(255,109,0,0.14),transparent_38%)]" />
+      <div className="container-lg relative">
+        <SectionHeading index="09" title="Let's Build Something" className="mb-8" />
+        <p className="mb-8 max-w-2xl about-typography-copy" style={textStrong}>Open to internships, collaborations and projects.</p>
 
-      <div className="container mx-auto px-4 relative z-10 w-full max-w-5xl">
-        <div className="grid md:grid-cols-2 gap-8 items-center">
-
-          {/* Left: Info Terminal */}
-          <div className="space-y-6">
-            <div>
-              <h2 className="text-2xl md:text-3xl font-dystopian mb-2" style={textStrong}>
-                <DecryptedText text="ENCRYPTED COMMS" />
-              </h2>
-              <div className="h-1 w-24 bg-cyber-pink"></div>
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+          <div className="space-y-4">
+            <div className="group relative overflow-hidden rounded-2xl border border-cyan/20 bg-slate-900/45 p-5 backdrop-blur-xl transition-all duration-300 hover:border-violet/55 hover:shadow-[0_22px_64px_rgba(0,0,0,0.48),0_0_22px_rgba(255,109,0,0.18)]">
+              <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_16%_18%,rgba(59,130,246,0.18),transparent_38%),radial-gradient(circle_at_84%_12%,rgba(255,109,0,0.14),transparent_35%)] opacity-70 group-hover:opacity-100 transition-opacity duration-300" />
+              <div className="relative z-10">
+              <div className="mb-3 flex items-center gap-2 text-cyan"><FaEnvelope /> <span className="about-typography-eyebrow text-[10px]">Email</span></div>
+              <p className="mb-3 text-sm about-typography-copy" style={textStrong}>thakare2829@gmail.com</p>
+              <button
+                onClick={copyEmail}
+                className="rounded-lg border border-cyan/30 bg-cyan/10 px-3 py-2 text-xs font-mono uppercase tracking-[0.2em] text-cyan transition hover:border-cyan hover:bg-cyan/20"
+              >
+                {copied ? 'Copied!' : 'Copy'}
+              </button>
+              </div>
             </div>
 
-            <p className="font-mono text-sm leading-relaxed border-l-2 border-cyber-blue/30 pl-4" style={textPrimary}>
-              Secure channel open. Send your inquiries, collaboration proposals, or mission briefings directly to my encrypted inbox.
-              All transmissions are protected by end-to-end quantum encryption.
-            </p>
+            <div className="group relative overflow-hidden rounded-2xl border border-cyan/20 bg-slate-900/45 p-5 backdrop-blur-xl transition-all duration-300 hover:border-violet/55 hover:shadow-[0_22px_64px_rgba(0,0,0,0.48),0_0_22px_rgba(255,109,0,0.18)]">
+              <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_16%_18%,rgba(59,130,246,0.18),transparent_38%),radial-gradient(circle_at_84%_12%,rgba(255,109,0,0.14),transparent_35%)] opacity-70 group-hover:opacity-100 transition-opacity duration-300" />
+              <div className="relative z-10">
+              <div className="mb-3 flex items-center gap-2 text-cyan"><FaLinkedin /> <span className="about-typography-eyebrow text-[10px]">LinkedIn</span></div>
+              <p className="mb-3 text-sm about-typography-copy" style={textStrong}>ujwalthakare-300b25264</p>
+              <a
+                href="https://linkedin.com/in/ujwalthakare-300b25264"
+                target="_blank"
+                rel="noreferrer"
+                className="rounded-lg border border-cyan/30 bg-cyan/10 px-3 py-2 text-xs font-mono uppercase tracking-[0.2em] text-cyan transition hover:border-cyan hover:bg-cyan/20"
+              >
+                Visit
+              </a>
+              </div>
+            </div>
 
-            <div className="p-5 font-mono text-xs rounded-lg relative overflow-hidden group" style={panelSurface}>
-              <div className="absolute top-0 right-0 p-2 opacity-50"><FaLock /></div>
-              <div className="space-y-4">
-                <div className="flex items-center gap-3">
-                  <span className="text-cyber-green">●</span>
-                  <span className="text-cyber-blue">CHANNEL_STATUS: SECURE</span>
-                </div>
-                <div className="flex items-center gap-3">
-                  <span className="text-cyber-green">●</span>
-                  <span className="text-cyber-blue">LATENCY: 24ms</span>
-                </div>
-                <div>
-                  <span className="text-gray-500 block mb-1">AVAILABLE PROTOCOLS:</span>
-                  <div className="flex gap-2">
-                    <SocialLink href="#" label="MAIL_TO" />
-                    <SocialLink href="#" label="LINKED_IN" />
-                    <SocialLink href="#" label="X_COM" />
-                  </div>
-                </div>
+            <div className="group relative overflow-hidden rounded-2xl border border-cyan/20 bg-slate-900/45 p-5 backdrop-blur-xl transition-all duration-300 hover:border-violet/55 hover:shadow-[0_22px_64px_rgba(0,0,0,0.48),0_0_22px_rgba(255,109,0,0.18)]">
+              <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_16%_18%,rgba(59,130,246,0.18),transparent_38%),radial-gradient(circle_at_84%_12%,rgba(255,109,0,0.14),transparent_35%)] opacity-70 group-hover:opacity-100 transition-opacity duration-300" />
+              <div className="relative z-10">
+              <div className="mb-3 flex items-center gap-2 text-cyan"><FaGithub /> <span className="about-typography-eyebrow text-[10px]">GitHub</span></div>
+              <p className="mb-3 text-sm about-typography-copy" style={textStrong}>github.com/ujwalthakare</p>
+              <a
+                href="https://github.com/ujwalthakare"
+                target="_blank"
+                rel="noreferrer"
+                className="rounded-lg border border-cyan/30 bg-cyan/10 px-3 py-2 text-xs font-mono uppercase tracking-[0.2em] text-cyan transition hover:border-cyan hover:bg-cyan/20"
+              >
+                Visit
+              </a>
               </div>
             </div>
           </div>
 
-          {/* Right: Input Terminal */}
-          <div className="relative">
-            {/* Terminal Frame */}
-            <div className="backdrop-blur-md rounded-lg overflow-hidden" style={panelSurface}>
-              {/* Header */}
-              <div className="p-2 flex items-center justify-between" style={{ background: 'var(--panel-bg-shade)', borderBottom: '1px solid var(--panel-border)' }}>
-                <div className="flex gap-2 px-2">
-                  <div className="w-3 h-3 rounded-full bg-red-500/50"></div>
-                  <div className="w-3 h-3 rounded-full bg-yellow-500/50"></div>
-                  <div className="w-3 h-3 rounded-full bg-green-500/50"></div>
-                </div>
-                <div className="font-mono text-xs text-cyber-blue/80 flex items-center gap-2">
-                  <FaTerminal /> bash -- secure_uplink
-                </div>
-              </div>
-
-              {/* Form Body */}
-              <div className="p-6 relative min-h-[400px]" style={textPrimary}>
-                {status === 'success' ? (
-                  <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    className="absolute inset-0 flex flex-col items-center justify-center text-center p-8"
-                  >
-                    <FaCheckCircle className="text-5xl text-cyber-green mb-4" />
-                    <h3 className="text-xl font-dystopian mb-2" style={textStrong}>PACKET SENT</h3>
-                    <p className="font-mono text-xs" style={textPrimary}>Your transmission has been successfully uploaded to the server.</p>
-                    <button
-                      onClick={() => setStatus('idle')}
-                      className="mt-6 text-cyber-blue hover:text-white underline font-mono text-xs"
-                    >
-                      SEND_NEW_MESSAGE
-                    </button>
-                  </motion.div>
-                ) : (
-                  <form onSubmit={handleSubmit} className="space-y-6">
-                    <TerminalInput
-                      label="IDENTITY" placeholder="ENTER_NAME"
-                      name="name" value={formData.name} onChange={handleChange}
-                    />
-                    <TerminalInput
-                      label="COORDINATES" placeholder="ENTER_EMAIL"
-                      name="email" value={formData.email} onChange={handleChange}
-                    />
-                    <div className="space-y-1">
-                      <label className="text-xs font-mono text-cyber-blue">PAYLOAD</label>
-                      <textarea
-                        name="message"
-                        value={formData.message}
-                        onChange={handleChange}
-                        rows={4}
-                        className="w-full border rounded p-3 font-mono text-sm transition-all resize-none"
-                        style={{ background: 'var(--panel-bg-lighter)', borderColor: 'var(--panel-border)', color: 'var(--text-primary)' }}
-                        placeholder="> ENTER_ENCRYPTED_MESSAGE..."
-                      />
-                    </div>
-
-                    {/* Log Output */}
-                    <div className="min-h-[60px] font-mono text-[10px] text-cyber-pink/80 p-2 border-l-2 border-cyber-pink/30 opacity-80">
-                      {logs.map((log, i) => (
-                        <div key={i}>{log}</div>
-                      ))}
-                      {status === 'encrypting' && (
-                        <motion.div
-                          animate={{ opacity: [0, 1, 0] }}
-                          transition={{ repeat: Infinity, duration: 0.8 }}
-                        >_</motion.div>
-                      )}
-                    </div>
-
-                    <button
-                      type="submit"
-                      disabled={status !== 'idle'}
-                      className={`w-full py-4 font-mono font-bold text-sm tracking-widest transition-all duration-300 relative overflow-hidden group border ${status === 'idle'
-                        ? 'border-cyber-blue text-cyber-blue'
-                        : 'border-gray-400 text-gray-500 cursor-wait'
-                        }`}
-                      style={status === 'idle' ? { background: 'var(--panel-bg-lighter)' } : { background: 'rgba(12, 14, 26, 0.2)' }}
-                    >
-                      {status === 'idle' && (
-                        <span className="flex items-center justify-center gap-2 relative z-10">
-                          <FaPaperPlane /> INITIATE UPLINK
-                        </span>
-                      )}
-                      {status !== 'idle' && (
-                        <span className="flex items-center justify-center gap-2 relative z-10 animate-pulse">
-                          {status === 'encrypting' ? 'ENCRYPTING...' : 'TRANSMITTING...'}
-                        </span>
-                      )}
-                      {status === 'idle' && <div className="absolute inset-0 bg-cyber-blue transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-300"></div>}
-                    </button>
-                  </form>
-                )}
-              </div>
+          <motion.form
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true, margin: '-100px' }}
+            className="group relative overflow-hidden rounded-2xl border border-cyan/20 bg-slate-900/45 p-5 backdrop-blur-xl transition-all duration-300 hover:border-violet/55 hover:shadow-[0_22px_64px_rgba(0,0,0,0.48),0_0_22px_rgba(255,109,0,0.18)]"
+          >
+            <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_16%_18%,rgba(59,130,246,0.18),transparent_38%),radial-gradient(circle_at_84%_12%,rgba(255,109,0,0.14),transparent_35%)] opacity-70 group-hover:opacity-100 transition-opacity duration-300" />
+            <div className="relative z-10">
+            <div className="mb-4">
+              <label className="mb-2 block about-typography-eyebrow text-[10px] text-cyan">Name</label>
+              <input
+                value={name}
+                onChange={(event) => setName(event.target.value)}
+                placeholder="Your name"
+                className="w-full rounded-lg border border-cyan/25 bg-slate-950/5 px-3 py-2 text-sm text-slate-1000 outline-none transition focus:border-cyan"
+              />
             </div>
-          </div>
 
+            <div className="mb-4">
+              <label className="mb-2 block about-typography-eyebrow text-[10px] text-cyan">Email</label>
+              <input
+                value={email}
+                onChange={(event) => setEmail(event.target.value)}
+                placeholder="your@email.com"
+                className="w-full rounded-lg border border-cyan/25 bg-slate-950/5 px-3 py-2 text-sm text-slate-1000 outline-none transition focus:border-cyan"
+              />
+            </div>
+
+            <div className="mb-5">
+              <label className="mb-2 block about-typography-eyebrow text-[10px] text-cyan">Message</label>
+              <textarea
+                value={message}
+                onChange={(event) => setMessage(event.target.value)}
+                placeholder="Tell me about the opportunity..."
+                rows={6}
+                className="w-full rounded-lg border border-cyan/25 bg-slate-950/5 px-3 py-2 text-sm text-slate-1000 outline-none transition focus:border-cyan"
+              />
+            </div>
+
+            <a
+              href={mailtoHref}
+              className="inline-flex w-full items-center justify-center rounded-xl border border-cyan/40 bg-cyan/15 px-4 py-3 text-sm font-semibold uppercase tracking-[0.15em] text-cyan transition hover:bg-cyan/25"
+            >
+              Send Message
+            </a>
+            </div>
+          </motion.form>
         </div>
       </div>
     </section>
   );
 };
-
-const TerminalInput = ({ label, placeholder, name, value, onChange }: any) => (
-  <div className="space-y-1">
-    <label className="text-xs font-mono text-cyber-blue">{label}</label>
-    <div className="relative">
-      <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 font-mono text-xs">{'>'}</span>
-      <input
-        type="text"
-        name={name}
-        value={value}
-        onChange={onChange}
-        className="w-full border rounded py-2.5 pl-8 pr-3 font-mono text-sm transition-all"
-        style={{ background: 'var(--panel-bg-lighter)', borderColor: 'var(--panel-border)', color: 'var(--text-primary)' }}
-        placeholder={placeholder}
-      />
-    </div>
-  </div>
-);
-
-const SocialLink = ({ href, label }: { href: string, label: string }) => (
-  <a href={href} className="px-2 py-1 bg-cyber-blue/10 text-[10px] text-cyber-blue border border-cyber-blue/20 hover:bg-cyber-blue hover:text-black transition-colors">
-    {label}
-  </a>
-);
 
 export default Contact;

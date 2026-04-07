@@ -36,11 +36,11 @@ const CaseStudiesPage = () => {
     <section className="pt-32 pb-24">
       <div className="container mx-auto px-4">
         <div className="max-w-3xl mb-12">
-          <p className="font-mono text-cyber-blue uppercase tracking-widest text-sm">Case Studies</p>
-          <h1 className="text-4xl md:text-5xl font-dystopian text-white mt-4 mb-6">
+          <p className="about-typography-eyebrow text-sm">Case Studies</p>
+          <h1 className="about-typography-title text-4xl md:text-5xl mt-4 mb-6">
             Deep dives into mission-critical builds.
           </h1>
-          <p className="text-gray-300 text-lg">
+          <p className="about-typography-copy text-lg">
             Each case study captures the problem framing, architectural decisions, and measurable outcomes that shaped my major projects.
           </p>
         </div>
@@ -53,7 +53,7 @@ const CaseStudiesPage = () => {
             >
               <header className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
                 <div>
-                  <h2 className="text-2xl md:text-3xl font-cyber text-white">{study.title}</h2>
+                  <h2 className="about-typography-title text-2xl md:text-3xl">{study.title}</h2>
                   <p className="text-sm text-cyber-pink mt-1">{study.subtitle}</p>
                 </div>
                 <a
@@ -66,7 +66,7 @@ const CaseStudiesPage = () => {
                 </a>
               </header>
 
-              <p className="text-gray-300 leading-relaxed mb-6">{study.description}</p>
+              <p className="about-typography-copy mb-6">{study.description}</p>
 
               <div className="flex flex-wrap gap-3 mb-6">
                 {study.stack.map((item) => (

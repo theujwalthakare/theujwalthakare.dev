@@ -1,21 +1,9 @@
 import { useEffect } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
 import Navbar from './Navbar';
-import Footer from './Footer';
-import ScannerCursor from '../ui/ScannerCursor';
-import ChatTerminal from '../ui/ChatTerminal';
-import CyberCanvas from '../ui/CyberCanvas';
 
 const Layout = () => {
   const location = useLocation();
-
-  // Initialize theme on mount
-  useEffect(() => {
-    const stored = localStorage.getItem('theme');
-    const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-    const theme = (stored === 'light' || stored === 'dark') ? stored : (prefersDark ? 'dark' : 'light');
-    document.documentElement.dataset.theme = theme;
-  }, []);
 
   useEffect(() => {
     const scrollToTarget = (hash: string) => {
@@ -27,7 +15,6 @@ const Layout = () => {
     };
 
     if (location.hash) {
-      // Delay to let the new route render before scrolling.
       requestAnimationFrame(() => {
         scrollToTarget(location.hash);
       });
@@ -37,28 +24,17 @@ const Layout = () => {
   }, [location.pathname, location.hash]);
 
   return (
-    <div className="relative min-h-screen">
-      <CyberCanvas />
-      <ScannerCursor />
-
-      {/* HUD Corner Brackets */}
-      <div className="fixed top-0 left-0 w-full h-full pointer-events-none z-[49]">
-        <div className="absolute top-4 left-4 w-8 h-8 border-l-2 border-t-2 border-cyber-blue/50 rounded-tl-lg" />
-        <div className="absolute top-4 right-4 w-8 h-8 border-r-2 border-t-2 border-cyber-blue/50 rounded-tr-lg" />
-        <div className="absolute bottom-4 left-4 w-8 h-8 border-l-2 border-b-2 border-cyber-blue/50 rounded-bl-lg" />
-        <div className="absolute bottom-4 right-4 w-8 h-8 border-r-2 border-b-2 border-cyber-blue/50 rounded-br-lg" />
-        {/* HUD Lines */}
-        <div className="absolute top-8 left-0 h-[calc(100%-4rem)] w-px bg-cyber-blue/10" />
-        <div className="absolute top-8 right-0 h-[calc(100%-4rem)] w-px bg-cyber-blue/10" />
+    <div className="relative min-h-screen bg-[var(--bg)] text-[var(--text)] transition-colors duration-300">
+      <div className="pointer-events-none fixed inset-0 -z-10">
+        <div className="absolute inset-0 bg-[linear-gradient(110deg,rgba(74,163,255,0.1)_0%,rgba(3,11,29,0.0)_48%,rgba(255,106,31,0.12)_100%)]" />
+        <div className="absolute -left-24 top-10 h-[36rem] w-[36rem] rounded-full bg-cyan/20 blur-3xl" />
+        <div className="absolute -right-24 top-1/3 h-[34rem] w-[34rem] rounded-full bg-violet/20 blur-3xl" />
       </div>
-
       <div className="relative z-10">
         <Navbar />
-        <main className="flex-grow pt-20">
+        <main className="flex-grow">
           <Outlet />
         </main>
-        <Footer />
-        <ChatTerminal />
       </div>
     </div>
   );

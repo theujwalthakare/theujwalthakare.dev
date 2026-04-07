@@ -26,3 +26,43 @@ dist-ssr
 .early.coverage
 .vercel
 .env*.local
+
+MYCSR.csr
+
+# Environment and secret files
+.env
+.env.*
+!.env.example
+!.env.template
+
+# Certificates, keys, and secrets
+*.pem
+*.key
+*.crt
+*.cer
+*.p12
+*.pfx
+*.jks
+*.keystore
+*.csr
+*.pub
+
+# Local cert folders (keep only non-sensitive placeholders if needed)
+public/certs/**
+!public/certs/.gitkeep
+
+# Test, coverage, cache, and build metadata
+coverage/
+.nyc_output/
+.cache/
+.turbo/
+.eslintcache
+*.tsbuildinfo
+
+# Runtime artifacts
+*.pid
+*.seed
+*.pid.lock
+
+# OS artifacts
+Thumbs.db

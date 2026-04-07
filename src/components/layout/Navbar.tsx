@@ -1,32 +1,38 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { FaBars, FaTimes, FaWifi, FaBatteryFull } from 'react-icons/fa';
+import { FaBars, FaMoon, FaSun, FaTimes } from 'react-icons/fa';
 
-import useSound from '../../hooks/useSound';
+const navItems = [
+  { name: 'Home', hash: '#home' },
+  { name: 'About', hash: '#about' },
+  { name: 'Experience', hash: '#experience' },
+  { name: 'Projects', hash: '#projects' },
+  { name: 'Skills', hash: '#skills' },
+  { name: 'Contact', hash: '#contact' },
+];
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const play = useSound();
-  const [time, setTime] = useState(new Date());
   const [scrolled, setScrolled] = useState(false);
-
+  const [theme, setTheme] = useState<'light' | 'dark'>(() => {
+    if (typeof window === 'undefined') return 'dark';
+    const storedTheme = window.localStorage.getItem('theme');
+    if (storedTheme === 'light' || storedTheme === 'dark') return storedTheme;
+    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  });
   const location = useLocation();
   const navigate = useNavigate();
 
-  // Clock Timer
   useEffect(() => {
-    const timer = setInterval(() => setTime(new Date()), 1000);
-    return () => clearInterval(timer);
-  }, []);
-
-  // Scroll Handler
-  useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 20);
-    };
+    const handleScroll = () => setScrolled(window.scrollY > 80);
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme);
+    window.localStorage.setItem('theme', theme);
+  }, [theme]);
 
   const handleSectionClick = (hash: string) => {
     setIsOpen(false);
@@ -36,108 +42,99 @@ const Navbar = () => {
         const element = document.querySelector(hash);
         if (element) element.scrollIntoView({ behavior: 'smooth' });
       }, 120);
-    } else {
-      const element = document.querySelector(hash);
-      if (element) element.scrollIntoView({ behavior: 'smooth' });
+      return;
     }
+    const element = document.querySelector(hash);
+    if (element) element.scrollIntoView({ behavior: 'smooth' });
   };
 
-  const navItems = [
-    { name: 'HOME', path: '/' },
-    { name: 'ABOUT', path: '/about' },
-    { name: 'SKILLS', hash: '#skills' },
-    { name: 'PROJECTS', hash: '#projects' },
-    { name: 'CONTACT', hash: '#contact' },
-  ];
+  const toggleTheme = () => {
+    setTheme((currentTheme) => (currentTheme === 'dark' ? 'light' : 'dark'));
+  };
 
   return (
     <nav
-      className={`fixed top-0 left-0 w-full z-50 border-b border-cyber-blue/20 transition-all duration-300 ${scrolled ? 'bg-black/90 backdrop-blur-md py-2' : 'bg-transparent py-4'
-        }`}
+      className={`fixed top-0 z-[100] w-full h-16 border-b transition-all duration-300 ${
+        scrolled
+          ? 'backdrop-blur-xl'
+          : 'border-transparent bg-transparent'
+      }`}
+      style={
+        scrolled
+          ? {
+              backgroundColor: 'var(--nav-bg-scrolled)',
+              borderColor: 'var(--nav-border)',
+            }
+          : undefined
+      }
     >
-      <div className="container mx-auto px-4 flex justify-between items-center relative">
+      <div className="mx-auto flex max-w-7xl select-none items-center justify-between px-4 py-4 md:px-8">
+        <h2
+          onClick={() => navigate('/')}
+          className="cursor-pointer font-headline text-2xl font-bold text-[var(--text)] transition hover:text-cyan"
+        >
+          Ujwal Thakare
+        </h2>
 
-        {/* Left: Brand & Status */}
-        <div className="flex items-center gap-4">
-         
-          <div className="hidden md:flex items-center gap-3 text-xs font-mono text-cyber-blue/60 border-l border-cyber-blue/30 pl-4">
-            <span className="flex items-center gap-1">
-              <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
-              SYSTEM ONLINE
-            </span>
-          </div>
-        </div>
-
-        {/* Center: Navigation Links (Desktop) */}
-        <div className="hidden md:flex items-center gap-1 bg-cyber-blue/5 border border-cyber-blue/10 px-2 py-1 rounded-full backdrop-blur-sm">
+        <div className="hidden items-center gap-6 md:flex">
           {navItems.map((item) => (
             <button
-              key={item.name}
-              onClick={() => {
-                play('click');
-                if (item.path) navigate(item.path);
-                else if (item.hash) handleSectionClick(item.hash);
-              }}
-              onMouseEnter={() => play('hover')}
-              className="px-4 py-1.5 text-xs text-cyber-blue hover:text-white hover:bg-cyber-blue/20 rounded-full transition-all duration-300 font-mono tracking-widest relative group overflow-hidden"
+              key={item.hash}
+              onClick={() => handleSectionClick(item.hash)}
+              className="font-mono text-xs uppercase tracking-[0.2em] text-[var(--muted)] transition hover:text-cyan"
             >
-              <span className="relative z-10">{item.name}</span>
+              {item.name}
             </button>
           ))}
+
+          <button
+            onClick={toggleTheme}
+            className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-[var(--nav-border)] bg-[var(--panel-bg)] text-[var(--text)] transition hover:border-cyan/50 hover:text-cyan"
+            aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
+            title={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
+          >
+            {theme === 'dark' ? <FaSun size={15} /> : <FaMoon size={15} />}
+          </button>
         </div>
 
-        {/* Right: HUD Data */}
-        <div className="hidden md:flex items-center gap-6 font-mono text-xs text-cyber-blue/80">
-          <div className="flex flex-col items-end leading-tight">
-            <span>NASHIK, IN</span>
-            <span className="opacity-50">19.9993° N, 73.7900° E</span>
-          </div>
-          <div className="h-8 w-px bg-cyber-blue/20"></div>
-          <div className="flex flex-col items-end leading-tight min-w-[80px]">
-            <span>{time.toLocaleTimeString([], { hour12: false })}</span>
-            <span className="opacity-50 tracking-wider">UTC+05:30</span>
-          </div>
-          <div className="flex items-center gap-3 text-cyber-blue">
-            <FaWifi title="Connection Stable" />
-            <FaBatteryFull title="Power Optimal" />
-            
-          </div>
-        </div>
+        <div className="flex items-center gap-2 md:hidden">
+          <button
+            onClick={toggleTheme}
+            className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-[var(--nav-border)] bg-[var(--panel-bg)] text-[var(--text)] transition hover:border-cyan/50 hover:text-cyan"
+            aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
+            title={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
+          >
+            {theme === 'dark' ? <FaSun size={14} /> : <FaMoon size={14} />}
+          </button>
 
-        {/* Mobile Toggle */}
-        <button
-          className="md:hidden text-cyber-blue hover:text-white transition-colors"
-          onClick={() => setIsOpen(!isOpen)}
-        >
-          {isOpen ? <FaTimes size={24} /> : <FaBars size={24} />}
-        </button>
+          <button
+            className="text-[var(--text)] transition hover:text-cyan"
+            onClick={() => setIsOpen((value) => !value)}
+            aria-label="Toggle navigation"
+          >
+            {isOpen ? <FaTimes size={20} /> : <FaBars size={20} />}
+          </button>
+        </div>
       </div>
 
-      {/* Mobile Menu Overlay */}
       {isOpen && (
-        <div className="md:hidden absolute top-full left-0 w-full bg-black/95 backdrop-blur-xl border-b border-cyber-blue/30 pb-6 shadow-2xl">
-          <div className="flex flex-col p-4 gap-2">
+        <div
+          className="border-t px-4 py-4 backdrop-blur-xl md:hidden"
+          style={{
+            borderColor: 'var(--nav-border)',
+            backgroundColor: 'var(--panel-bg)',
+          }}
+        >
+          <div className="flex flex-col gap-3">
             {navItems.map((item) => (
               <button
-                key={item.name}
-                onClick={() => {
-                  if (item.path) {
-                    setIsOpen(false);
-                    navigate(item.path);
-                  } else if (item.hash) {
-                    handleSectionClick(item.hash);
-                  }
-                }}
-                className="p-3 text-left border-l-2 border-cyber-blue/30 bg-cyber-blue/5 text-cyber-blue font-mono hover:border-cyber-blue hover:bg-cyber-blue/10 transition-all"
+                key={item.hash}
+                onClick={() => handleSectionClick(item.hash)}
+                className="rounded-lg border border-cyan/15 px-3 py-2 text-left font-mono text-xs uppercase tracking-[0.2em] text-[var(--muted)] transition hover:border-cyan/40 hover:text-cyan"
               >
                 {item.name}
               </button>
             ))}
-            
-            <div className="mt-4 pt-4 border-t border-white/10 flex justify-between text-xs font-mono text-gray-500">
-              <span>SYSTEM STATUS: NORMAL</span>
-              <span>{time.toLocaleTimeString()}</span>
-            </div>
           </div>
         </div>
       )}

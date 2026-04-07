@@ -34,11 +34,11 @@ const StudyMaterialPage = () => {
     <section className="pt-32 pb-24">
       <div className="container mx-auto px-4">
         <header className="max-w-2xl mb-12">
-          <p className="font-mono text-cyber-blue uppercase tracking-widest text-sm">Study Vault</p>
-          <h1 className="text-4xl md:text-5xl font-dystopian text-white mt-4 mb-6">
+          <p className="about-typography-eyebrow text-sm">Study Vault</p>
+          <h1 className="about-typography-title text-4xl md:text-5xl mt-4 mb-6">
             Resources I rely on to teach, mentor, and keep learning.
           </h1>
-          <p className="text-gray-300 text-lg">
+          <p className="about-typography-copy text-lg">
             Bookmark the assets you need — I refresh them frequently with labs, templates, and actionable notes from my own learning cycles.
           </p>
         </header>
@@ -51,10 +51,10 @@ const StudyMaterialPage = () => {
             >
               <div className="mb-4">
                 <p className="text-xs font-mono uppercase tracking-[0.35em] text-cyber-pink">{drop.format}</p>
-                <h2 className="mt-3 text-2xl font-cyber text-white">{drop.title}</h2>
+                <h2 className="about-typography-title mt-3 text-2xl">{drop.title}</h2>
               </div>
 
-              <p className="text-gray-300 mb-4">{drop.focus}</p>
+              <p className="about-typography-copy mb-4">{drop.focus}</p>
 
               <div className="flex items-center justify-between">
                 <span className="text-xs font-mono uppercase tracking-[0.3em] text-gray-400">{drop.size}</span>

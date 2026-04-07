@@ -11,8 +11,7 @@ const About = () => {
 
       <div className="container relative mx-auto px-4">
         <div className="mb-12 text-center space-y-3">
-          <p className="text-xl uppercase tracking-[0.32em] text-cyber-blue">About</p>
-          <h2 className="text-3xl md:text-3xl font-dystopian" style={textStrong}>
+            <h2 className="text-3xl md:text-3xl font-dystopian" style={textStrong}>
             <DecryptedText text="Who I Am" speed={60} />
           </h2>
           <p className="mx-auto max-w-2xl text-sm" style={textPrimary}>
@@ -26,10 +25,8 @@ const About = () => {
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_25%_25%,rgba(255,59,111,0.12),transparent_40%)] opacity-80" />
             <div className="relative flex flex-col gap-5">
               <div className="cyber-border p-2 max-w-md">
-                <div className="relative overflow-hidden aspect-[3/3] rounded-xl">
-                  <div className="absolute inset-0 bg-gradient-to-br from-cyber-blue/20 via-transparent to-cyber-blue/10" />
-                  <img src="/images/profile.jpg" alt="Ujwal Thakare" className="h-full w-full object-cover" />
-                </div>
+                {/* <div className="relative overflow-hidden aspect-[3/3] rounded-xl"> */}
+                 
               </div>
 
               <div className="grid grid-cols-2 gap-2 text-sm">
@@ -83,7 +80,7 @@ const About = () => {
             </div>
 
             <div className="grid gap-4 sm:grid-cols-3">
-              {[{ label: 'Years Learning', value: '3+' }, { label: 'Projects', value: '15+' }, { label: 'Domains', value: 'Web · AI · Security' }].map((stat) => (
+              {[{ label: 'Years Learning', value: '5+' }, { label: 'Projects', value: '10+' }, { label: 'Domains', value: 'Web · AI · Security' }].map((stat) => (
                 <div
                   key={stat.label}
                   className="rounded-2xl px-4 py-5 text-center"

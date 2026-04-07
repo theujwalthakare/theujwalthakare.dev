@@ -1,114 +1,307 @@
-import { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { FaGithub, FaExternalLinkAlt } from 'react-icons/fa';
-import HolographicCard from '../ui/HolographicCard';
-import DecryptedText from '../ui/DecryptedText';
-import { PROJECTS } from '../../data/projects';
+import { useEffect, useState } from 'react';
+import { AnimatePresence, motion } from 'framer-motion';
+import {
+  FaArrowUpRightFromSquare,
+  FaCircleXmark,
+  FaCode,
+  FaGithub,
+  FaCloud,
+  FaServer,
+  FaShieldHalved,
+} from 'react-icons/fa6';
+import { SectionHeading } from '../ui/SectionHeading';
+type ProjectItem = {
+  title: string;
+  description: string;
+  purpose: string;
+  details: string[];
+  stack: string[];
+  accent: 'cyan' | 'violet';
+  coreTint: 'blue' | 'emerald' | 'slate' | 'amber';
+  image: string;
+  links: {
+    github: string;
+    demo: string;
+  };
+};
+
+const PROJECTS: ProjectItem[] = [
+  {
+    title: 'CyberShield Nexus',
+    description:
+      'A cybercrime assistance and intelligence platform enabling users to report incidents via chatbot/voice, analyze threats in real-time, and provide actionable cybersecurity guidance using integrated threat intelligence systems.',
+    purpose:
+      'Built to simplify cybercrime reporting and deliver immediate, context-aware security assistance to users and teams.',
+    details: [
+      'Conversational incident reporting through chatbot and voice input.',
+      'Threat pattern analysis layer powered by search and intelligence APIs.',
+      'Actionable guidance generation for remediation and response workflows.',
+    ],
+    stack: ['Python', 'Django', 'Elasticsearch', 'Threat Intelligence APIs', 'NLP', 'React'],
+    accent: 'cyan',
+    coreTint: 'blue',
+    image: '/images/cybershield.jfif',
+    links: {
+      github: 'https://github.com/ujwalthakare',
+      demo: 'https://theujwalthakare.dev',
+    },
+  },
+  {
+    title: 'Digital Immune System (DIS)',
+    description:
+      'An experimental cognitive overlay security system for Kubernetes environments that detects anomalies, predicts failures, and enables self-healing infrastructure using AI-driven observability.',
+    purpose:
+      'Built to make cloud-native infrastructure resilient by combining predictive intelligence and self-healing automation.',
+    details: [
+      'Observability signals from Prometheus/Grafana used for anomaly detection.',
+      'Service mesh telemetry and policy-aware behavior using Istio.',
+      'Automated mitigation strategies for failure prevention and recovery.',
+    ],
+    stack: ['Kubernetes', 'Golang', 'Prometheus', 'Grafana', 'Istio', 'AI/ML'],
+    accent: 'violet',
+    coreTint: 'emerald',
+    image: '/images/DIS.jfif',
+    links: {
+      github: 'https://github.com/ujwalthakare',
+      demo: 'https://theujwalthakare.dev',
+    },
+  },
+  {
+    title: 'ARJUNA',
+    description:
+      'Autonomous Runtime Judgment Unified Network Analyzer that monitors network activity, detects intrusions, and performs intelligent decision-making using AI-powered analysis and real-time telemetry.',
+    purpose:
+      'Built to improve intrusion detection speed and decision quality with an autonomous network analysis pipeline.',
+    details: [
+      'Real-time telemetry ingestion and event correlation engine.',
+      'AI-assisted alert prioritization for faster response.',
+      'Integrated detection workflows with monitoring and dashboard tools.',
+    ],
+    stack: ['Node.js', 'AI/ML', 'Snort', 'Grafana', 'WebSockets', 'MongoDB'],
+    accent: 'cyan',
+    coreTint: 'slate',
+    image: '/images/arjuna.jfif',
+    links: {
+      github: 'https://github.com/ujwalthakare',
+      demo: 'https://theujwalthakare.dev',
+    },
+  },
+  {
+    title: 'Build2Show',
+    description:
+      'A platform for students to build portfolios, track progress, and prepare for placements with project showcases, learning paths, and interview preparation tools.',
+    purpose:
+      'Built to help students turn work into visible outcomes and prepare systematically for placement opportunities.',
+    details: [
+      'Project showcase system with structured profile and portfolio flow.',
+      'Progress tracking and learning-path guidance for preparation cycles.',
+      'Interview readiness tools and curated preparation modules.',
+    ],
+    stack: ['React', 'Firebase', 'Node.js', 'MongoDB', 'Tailwind CSS'],
+    accent: 'violet',
+    coreTint: 'amber',
+    image: '/images/build2show.jfif',
+    links: {
+      github: 'https://github.com/ujwalthakare',
+      demo: 'https://theujwalthakare.dev',
+    },
+  },
+];
+
+const iconFor = (title: string) => {
+  if (title.includes('CyberShield')) return FaShieldHalved;
+  if (title.includes('Digital Immune') || title.includes('DIS')) return FaCloud;
+  if (title.includes('ARJUNA')) return FaServer;
+  if (title.includes('Build2Show')) return FaCode;
+  return FaCode;
+};
 
 const Projects = () => {
-  const [filter, setFilter] = useState('all');
-  const textPrimary = { color: 'var(--text-primary)' };
-  const textStrong = { color: 'var(--text-strong)' };
+  const [selectedProject, setSelectedProject] = useState<ProjectItem | null>(null);
 
-  const filteredProjects =
-    filter === 'all'
-      ? PROJECTS
-      : PROJECTS.filter((project) => project.category === filter);
+  useEffect(() => {
+    if (!selectedProject) return undefined;
 
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+
+    const handleEscape = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setSelectedProject(null);
+      }
+    };
+
+    window.addEventListener('keydown', handleEscape);
+
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      window.removeEventListener('keydown', handleEscape);
+    };
+  }, [selectedProject]);
 
   return (
-    <section id="projects" className="py-20 relative" style={{ backgroundColor: 'var(--bg-body)' }}>
-      <div className="container mx-auto px-4">
-        <div className="text-center mb-12">
-          <h2 className="text-2xl md:text-3xl font-dystopian mb-6" style={textStrong}>
-            <DecryptedText text="FEATURED PROJECTS" />
-          </h2>
-          <div className="h-1 w-24 bg-cyber-blue mx-auto mb-8"></div>
-          <p className="max-w-2xl mx-auto mb-8" style={textPrimary}>
-            Here are some of the fully working, end-to-end projects I've built. Each one reflects my skills in real-world problem-solving and development.
+    <section id="projects" className="px-4 py-20 md:px-8 md:py-28">
+      <div className="container-lg">
+        <div className="mb-12 md:mb-16">           
+          <SectionHeading index="02" title="Build Projects" className="mb-14" />
+          
+          <p className="about-typography-copy max-w-md text-xs uppercase tracking-[0.18em]">
+            A showcase of full-stack problem solving, backend architecture, and practical cloud delivery.
           </p>
-
-          {/* Filter Buttons */}
-          <div className="flex flex-wrap justify-center gap-4 mb-12">
-            {['all', 'frontend', 'backend', 'fullstack'].map((cat) => (
-              <button
-                key={cat}
-                className={`rounded-full px-4 py-2 border text-sm font-semibold tracking-wide transition-colors duration-300 ${filter === cat
-                  ? 'border-cyber-blue text-cyber-blue bg-cyber-blue/10 shadow-[0_0_15px_rgba(255,59,111,0.25)]'
-                  : 'border-[color:var(--panel-border)] text-[color:var(--text-primary)]/70 hover:border-cyber-blue hover:text-cyber-blue'
-                  }`}
-                onClick={() => setFilter(cat)}
-              >
-                {cat.charAt(0).toUpperCase() + cat.slice(1)}
-              </button>
-            ))}
-          </div>
         </div>
+       
 
-        <AnimatePresence>
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
+          {PROJECTS.map((project, index) => {
+            const Icon = iconFor(project.title);
+            return (
+              <motion.div
+                key={project.title}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: index * 0.08 }}
+                viewport={{ once: true, margin: '-100px' }}
+                className="project-parent"
+              >
+                <article
+                  className={`project-ref-card project-ref-card--${project.accent}`}
+                  style={{ backgroundImage: `linear-gradient(160deg, rgba(15, 23, 42, 0.25) 0%, rgba(15, 23, 42, 0.72) 62%, rgba(15, 23, 42, 0.94) 100%), url(${project.image})` }}
+                  role="button"
+                  tabIndex={0}
+                  onClick={() => setSelectedProject(project)}
+                  onKeyDown={(event) => {
+                    if (event.key === 'Enter' || event.key === ' ') {
+                      event.preventDefault();
+                      setSelectedProject(project);
+                    }
+                  }}
+                >
+                  <div className={`project-ref-logo project-ref-logo--${project.coreTint}`}>
+                    <span className="project-ref-circle project-ref-circle1" />
+                    <span className="project-ref-circle project-ref-circle2" />
+                    <span className="project-ref-circle project-ref-circle3" />
+                    <span className="project-ref-circle project-ref-circle4" />
+                    <span className="project-ref-circle project-ref-circle5">
+                      <Icon className="project-logo-icon" />
+                    </span>
+                  </div>
+
+                  <div className="project-ref-glass" />
+
+                  <div className="project-ref-content">
+                    <span className="project-ref-title">{project.title}</span>
+                    {/* <span className="project-ref-text">{project.description}</span> */}
+                    <span className="project-ref-stack">{project.stack.join(' • ')}</span>
+                  </div>
+
+                  <div className="project-ref-bottom">
+                    <div className="project-ref-social-buttons-container">
+                      <a
+                        href={project.links.github}
+                        target="_blank"
+                        rel="noreferrer"
+                        aria-label={`${project.title} GitHub`}
+                        className="project-ref-social-button project-ref-social-button1"
+                        onClick={(event) => event.stopPropagation()}
+                      >
+                        <FaGithub />
+                      </a>
+                      <a
+                        href={project.links.demo}
+                        target="_blank"
+                        rel="noreferrer"
+                        aria-label={`${project.title} Demo`}
+                        className="project-ref-social-button project-ref-social-button2"
+                        onClick={(event) => event.stopPropagation()}
+                      >
+                        <FaArrowUpRightFromSquare />
+                      </a>
+                      {/* <a href="https://x.com/" target="_blank" rel="noreferrer" aria-label={`${project.title} X`} className="project-ref-social-button project-ref-social-button3">
+                        <FaXTwitter />
+                      </a> */}
+                    </div>
+                  </div>
+                </article>
+              </motion.div>
+            );
+          })}
+        </div>
+      </div>
+
+      <AnimatePresence>
+        {selectedProject && (
           <motion.div
-            layout
+            className="project-modal-backdrop"
+            onClick={() => setSelectedProject(null)}
+            role="presentation"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="grid gap-5 md:grid-cols-2 lg:grid-cols-3"
+            transition={{ duration: 0.2, ease: 'easeOut' }}
           >
-            {filteredProjects.map((project) => (
-              <HolographicCard key={project.title}>
-                <div className="flex flex-col h-full p-5 rounded-xl">
-                  <div className="mb-3 flex items-start justify-between">
-                    <div>
-                      <h3 className="text-lg font-bold transition-colors duration-300" style={textStrong}>
-                        {project.title}
-                      </h3>
-                      <span className="text-xs text-cyber-blue font-mono mt-1 block">
-                        {project.category} // {project.technologies.slice(0, 2).join(', ')}
-                      </span>
-                    </div>
-                    <div className="flex gap-2">
-                      <a
-                        href={project.github}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-gray-400 hover:text-white transition-colors"
-                        title="View Code"
-                      >
-                        <FaGithub size={18} />
-                      </a>
-                      <a
-                        href={project.demo}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-gray-400 hover:text-cyber-blue transition-colors"
-                        title="Live Demo"
-                      >
-                        <FaExternalLinkAlt size={18} />
-                      </a>
-                    </div>
-                  </div>
+            <motion.div
+              className="project-modal-card"
+              role="dialog"
+              aria-modal="true"
+              aria-label={`${selectedProject.title} details`}
+              onClick={(event) => event.stopPropagation()}
+              initial={{ opacity: 0, scale: 0.96, y: 8 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.97, y: 8 }}
+              transition={{ duration: 0.24, ease: [0.22, 1, 0.36, 1] }}
+            >
+            <div className="project-modal-header">
+              <div>
+                <p className="project-modal-label">Project Deep Dive</p>
+                <h3 className="project-modal-title">{selectedProject.title}</h3>
+              </div>
+              <button type="button" className="project-modal-close" aria-label="Close project details" onClick={() => setSelectedProject(null)}>
+                <FaCircleXmark />
+              </button>
+            </div>
 
-                  <p className="text-sm mb-4 flex-grow leading-relaxed" style={textPrimary}>
-                    {project.description}
-                  </p>
+            <div className="project-modal-scroll">
+              <div className="project-modal-banner" style={{ backgroundImage: `linear-gradient(155deg, rgba(15, 23, 42, 0.2) 0%, rgba(15, 23, 42, 0.74) 75%), url(${selectedProject.image})` }} />
 
-                  <div className="flex flex-wrap gap-2 mt-auto">
-                    {project.technologies.map((tech) => (
-                      <span
-                        key={tech}
-                        className="rounded-full bg-cyber-blue/10 px-2.5 py-0.5 text-xs text-cyber-blue border border-cyber-blue/20"
-                      >
-                        {tech}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              </HolographicCard>
-            ))}
+              <section className="project-modal-section">
+                <h4>What This Project Is Made For</h4>
+                <p>{selectedProject.purpose}</p>
+              </section>
+
+              <section className="project-modal-section">
+                <h4>Overview</h4>
+                <p>{selectedProject.description}</p>
+              </section>
+
+              <section className="project-modal-section">
+                <h4>Key Highlights</h4>
+                <ul>
+                  {selectedProject.details.map((detail) => (
+                    <li key={detail}>{detail}</li>
+                  ))}
+                </ul>
+              </section>
+
+              <section className="project-modal-section">
+                <h4>Tech Stack</h4>
+                <p>{selectedProject.stack.join(' • ')}</p>
+              </section>
+
+              <section className="project-modal-actions">
+                <a href={selectedProject.links.github} target="_blank" rel="noreferrer" className="project-modal-action">
+                  <FaGithub /> GitHub
+                </a>
+                <a href={selectedProject.links.demo} target="_blank" rel="noreferrer" className="project-modal-action">
+                  <FaArrowUpRightFromSquare /> Demo
+                </a>
+              </section>
+            </div>
+            </motion.div>
           </motion.div>
-        </AnimatePresence>
-      </div>
+        )}
+      </AnimatePresence>
     </section>
   );
-};
+}
 
 export default Projects;
