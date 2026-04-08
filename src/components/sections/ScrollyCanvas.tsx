@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useMotionValueEvent, useScroll } from 'framer-motion';
 import Overlay from './Overlay';
 
@@ -32,11 +32,16 @@ const drawImageCover = (
 };
 
 const ScrollyCanvas = () => {
+  // [CHANGE: progressive-loading] Render quickly after the first few frames are decoded.
+  const INITIAL_FRAMES_TO_UNLOCK = 2;
+
   const sectionRef = useRef<HTMLElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const imagesRef = useRef<HTMLImageElement[]>([]);
+  const loadedFrameIndexesRef = useRef<Set<number>>(new Set());
   const currentFrameRef = useRef(0);
   const [ready, setReady] = useState(false);
+  const [loadedFramesCount, setLoadedFramesCount] = useState(0);
 
   const frameUrls = useMemo(() => {
     return Object.entries(frameModuleMap)
@@ -77,19 +82,78 @@ const ScrollyCanvas = () => {
     currentFrameRef.current = frameIndex;
   };
 
+  // [CHANGE: progressive-loading] Find the closest already-loaded frame if the exact target frame is not ready yet.
+  const getBestAvailableFrame = useCallback((requestedFrameIndex: number) => {
+    if (loadedFrameIndexesRef.current.has(requestedFrameIndex)) {
+      return requestedFrameIndex;
+    }
+
+    for (let index = requestedFrameIndex - 1; index >= 0; index -= 1) {
+      if (loadedFrameIndexesRef.current.has(index)) {
+        return index;
+      }
+    }
+
+    for (let index = requestedFrameIndex + 1; index < frameUrls.length; index += 1) {
+      if (loadedFrameIndexesRef.current.has(index)) {
+        return index;
+      }
+    }
+
+    return 0;
+  }, [frameUrls.length]);
+
+  /*
+   * [PREVIOUS LOGIC - COMMENTED FOR EASY UNDO]
+   * This waited for all frames before setting ready=true.
+   *
+   * useEffect(() => {
+   *   if (!frameUrls.length) return;
+   *
+   *   let loaded = 0;
+   *   const imageList = frameUrls.map((url) => {
+   *     const image = new Image();
+   *     image.decoding = 'async';
+   *
+   *     const onAssetResolved = () => {
+   *       loaded += 1;
+   *       if (loaded === frameUrls.length) {
+   *         imagesRef.current = imageList;
+   *         setReady(true);
+   *       }
+   *     };
+   *
+   *     image.onload = onAssetResolved;
+   *     image.onerror = onAssetResolved;
+   *     image.src = url;
+   *     return image;
+   *   });
+   * }, [frameUrls]);
+   */
+
+  // [CHANGE: progressive-loading] Unlock rendering after first N frames, then continue loading in background.
   useEffect(() => {
     if (!frameUrls.length) return;
 
     let loaded = 0;
-    const imageList = frameUrls.map((url) => {
+    let unlocked = false;
+    const imageList = frameUrls.map((url, index) => {
       const image = new Image();
       image.decoding = 'async';
 
       const onAssetResolved = () => {
         loaded += 1;
-        if (loaded === frameUrls.length) {
-          imagesRef.current = imageList;
+
+        loadedFrameIndexesRef.current.add(index);
+        setLoadedFramesCount(loaded);
+
+        if (!unlocked && loadedFrameIndexesRef.current.size >= Math.min(INITIAL_FRAMES_TO_UNLOCK, frameUrls.length)) {
+          unlocked = true;
           setReady(true);
+        }
+
+        if (loaded === frameUrls.length) {
+          setLoadedFramesCount(frameUrls.length);
         }
       };
 
@@ -98,27 +162,39 @@ const ScrollyCanvas = () => {
       image.src = url;
       return image;
     });
+
+    imagesRef.current = imageList;
+    const loadedFrameIndexes = loadedFrameIndexesRef.current;
+
+    return () => {
+      imagesRef.current = [];
+      loadedFrameIndexes.clear();
+      setLoadedFramesCount(0);
+      setReady(false);
+    };
   }, [frameUrls]);
 
   useEffect(() => {
     if (!ready) return;
-    renderFrame(currentFrameRef.current);
+    renderFrame(getBestAvailableFrame(currentFrameRef.current));
 
     const handleResize = () => {
-      renderFrame(currentFrameRef.current);
+      renderFrame(getBestAvailableFrame(currentFrameRef.current));
     };
 
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
-  }, [ready]);
+  }, [getBestAvailableFrame, ready]);
 
   useMotionValueEvent(scrollYProgress, 'change', (progress) => {
     if (!ready || !imagesRef.current.length) return;
 
-    const nextFrame = Math.min(
+    const targetFrame = Math.min(
       imagesRef.current.length - 1,
       Math.max(0, Math.round(progress * (imagesRef.current.length - 1))),
     );
+
+    const nextFrame = getBestAvailableFrame(targetFrame);
 
     if (nextFrame !== currentFrameRef.current) {
       renderFrame(nextFrame);
@@ -135,7 +211,7 @@ const ScrollyCanvas = () => {
 
         {!ready && (
           <div className="absolute inset-0 grid place-items-center bg-bg text-sm uppercase tracking-[0.35em] text-muted">
-            Loading Frames
+            Loading Frames ({loadedFramesCount}/{frameUrls.length})
           </div>
         )}
       </div>
