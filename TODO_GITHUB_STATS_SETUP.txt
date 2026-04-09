@@ -1,0 +1,176 @@
+TODO: GitHub Stats, Streak, and Profile Info Setup Guide
+
+Goal:
+Show reliable GitHub profile stats, streak, and contribution details on the portfolio with stable APIs and safe token usage.
+
+====================================================================
+PHASE 1 - Decide Data Sources
+====================================================================
+
+1. Use official GitHub APIs for core profile data (recommended)
+   - REST base: https://api.github.com
+   - GraphQL endpoint: https://api.github.com/graphql
+
+2. Use official APIs for:
+   - User profile and counts
+   - Repository stats
+   - Contribution totals
+
+3. Use third-party cards only where GitHub has no direct endpoint:
+   - Streak card (third-party)
+   - Readme-style cards (optional)
+
+4. Keep this rule:
+   - Official API first
+   - Third-party only for visual cards or streak shortcuts
+
+====================================================================
+PHASE 2 - Collect Required API Links
+====================================================================
+
+Replace USERNAME with your GitHub username.
+
+1. Core profile
+   GET https://api.github.com/users/USERNAME
+
+2. Repositories
+   GET https://api.github.com/users/USERNAME/repos?sort=updated&per_page=100
+
+3. Public activity
+   GET https://api.github.com/users/USERNAME/events/public
+
+4. Contribution calendar SVG (public)
+   GET https://github.com/users/USERNAME/contributions
+
+5. Optional third-party card links
+   - Stats card:
+     https://github-readme-stats.vercel.app/api?username=USERNAME
+   - Top languages:
+     https://github-readme-stats.vercel.app/api/top-langs/?username=USERNAME
+   - Streak card:
+     https://streak-stats.demolab.com?user=USERNAME
+
+====================================================================
+PHASE 3 - Prepare Authentication Safely
+====================================================================
+
+1. Create a GitHub Personal Access Token (PAT)
+   - Scope: read-only public data is enough for most portfolio use
+   - Never hardcode token in frontend source
+
+2. Add token in local environment only
+   - Create or update .env.local
+   - Add:
+     VITE_GITHUB_USERNAME=YOUR_USERNAME
+     VITE_GITHUB_TOKEN=YOUR_TOKEN
+
+3. Important security note
+   - VITE_ variables are exposed in frontend bundles
+   - For production-safe token handling, use a backend/proxy or serverless function
+
+====================================================================
+PHASE 4 - Build Data Layer in Project
+====================================================================
+
+1. Create a service file for GitHub fetches
+   Suggested path:
+   src/services/githubStats.ts
+
+2. Add typed fetch helpers for:
+   - getUserProfile()
+   - getRepos()
+   - getContributionSummary() via GraphQL
+   - getComputedStreak() (if self-calculating streak)
+
+3. Add request safeguards
+   - Timeout handling
+   - Graceful fallback values
+   - Rate-limit error messaging
+
+4. Cache results
+   - Keep in-memory cache for session
+   - Optional: localStorage with 15-60 minute TTL
+
+====================================================================
+PHASE 5 - Implement Streak Logic (Official Path)
+====================================================================
+
+1. Use GraphQL contributionsCollection by date range
+2. Build a list of days with contributionCount > 0
+3. Compute:
+   - Current streak
+   - Longest streak
+   - Total contributions in current year
+
+4. Fallback option
+   - If GraphQL or token is unavailable, show third-party streak card link
+
+====================================================================
+PHASE 6 - Integrate UI in Existing Component
+====================================================================
+
+1. Update existing section component:
+   src/components/sections/GitHubStats.tsx
+
+2. On mount:
+   - Fetch data from service
+   - Show loading skeleton
+   - Render cards after success
+   - Show fallback text on error
+
+3. Suggested cards:
+   - Public repos
+   - Followers
+   - Total stars across repos
+   - Current streak
+   - Longest streak
+   - Top languages
+
+====================================================================
+PHASE 7 - Production Hardening
+====================================================================
+
+1. Avoid exposing PAT in frontend
+   - Move GitHub calls to backend endpoint or serverless function
+
+2. Add server-side cache
+   - 10-30 minutes for profile data
+   - 1 day for contribution/streak data if acceptable
+
+3. Handle GitHub rate limits
+   - Detect status 403 and x-ratelimit-remaining
+   - Show user-friendly fallback
+
+====================================================================
+PHASE 8 - Testing Checklist
+====================================================================
+
+1. First load works without blank section
+2. Slow network still shows fallback UI
+3. Invalid token does not crash section
+4. No token still renders minimal public stats
+5. Mobile layout remains readable
+6. Build passes:
+   npm run build
+
+====================================================================
+PHASE 9 - Optional Nice Enhancements
+====================================================================
+
+1. Add a Last Updated timestamp
+2. Add manual refresh button with debounce
+3. Animate counters on enter viewport
+4. Add link to full GitHub profile and pinned repos
+
+====================================================================
+QUICK EXECUTION ORDER (SHORT VERSION)
+====================================================================
+
+1. Collect username and required API links
+2. Create service: src/services/githubStats.ts
+3. Add fetch + types + fallback
+4. Add streak computation (GraphQL)
+5. Integrate into src/components/sections/GitHubStats.tsx
+6. Add loading/error states
+7. Run npm run build
+8. Move token usage to backend for production

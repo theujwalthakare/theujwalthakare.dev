@@ -61,9 +61,9 @@ const Contact = () => {
               <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_16%_18%,rgba(59,130,246,0.18),transparent_38%),radial-gradient(circle_at_84%_12%,rgba(255,109,0,0.14),transparent_35%)] opacity-70 group-hover:opacity-100 transition-opacity duration-300" />
               <div className="relative z-10">
               <div className="mb-3 flex items-center gap-2 text-cyan"><FaGithub /> <span className="about-typography-eyebrow text-[10px]">GitHub</span></div>
-              <p className="mb-3 text-sm about-typography-copy" style={textStrong}>github.com/ujwalthakare</p>
+              <p className="mb-3 text-sm about-typography-copy" style={textStrong}>github.com/theujwalthakare</p>
               <a
-                href="https://github.com/ujwalthakare"
+                href="https://github.com/theujwalthakare"
                 target="_blank"
                 rel="noreferrer"
                 className="rounded-lg border border-cyan/30 bg-cyan/10 px-3 py-2 text-xs font-mono uppercase tracking-[0.2em] text-cyan transition hover:border-cyan hover:bg-cyan/20"

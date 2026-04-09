@@ -42,7 +42,7 @@ const PROJECTS: ProjectItem[] = [
     coreTint: 'blue',
     image: '/images/cybershield.jfif',
     links: {
-      github: 'https://github.com/ujwalthakare',
+      github: 'https://github.com/theujwalthakare',
       demo: 'https://theujwalthakare.dev',
     },
   },
@@ -62,7 +62,7 @@ const PROJECTS: ProjectItem[] = [
     coreTint: 'emerald',
     image: '/images/DIS.jfif',
     links: {
-      github: 'https://github.com/ujwalthakare',
+      github: 'https://github.com/theujwalthakare',
       demo: 'https://theujwalthakare.dev',
     },
   },
@@ -82,7 +82,7 @@ const PROJECTS: ProjectItem[] = [
     coreTint: 'slate',
     image: '/images/arjuna.jfif',
     links: {
-      github: 'https://github.com/ujwalthakare',
+      github: 'https://github.com/theujwalthakare',
       demo: 'https://theujwalthakare.dev',
     },
   },
@@ -102,7 +102,7 @@ const PROJECTS: ProjectItem[] = [
     coreTint: 'amber',
     image: '/images/build2show.jfif',
     links: {
-      github: 'https://github.com/ujwalthakare',
+      github: 'https://github.com/theujwalthakare',
       demo: 'https://theujwalthakare.dev',
     },
   },

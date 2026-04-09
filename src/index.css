@@ -899,6 +899,7 @@
       height: min(88vh, 700px);
     }
   }
+
 }
 
 @layer utilities {

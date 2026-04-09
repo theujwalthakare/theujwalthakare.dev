@@ -71,59 +71,54 @@ export function Certifications() {
 
   const certs: CertificateItem[] = [
     {
-      title: 'Google Cloud Engineer Associate',
-      issuer: 'Google Cloud',
-      image: '/certs/claud-eng.png',
-      accent: 'violet',
-    },
-    {
       title: 'Vaadin Certified Developer',
       issuer: 'Vaadin',
-      image: '/certs/vaadin-dev.png',
+      image: './certs/vaadin-dev.png',
       accent: 'emerald',
     },
-    {
-      title: 'Create a Secure Data Lake on Cloud Storage',
-      issuer: 'Google Cloud',
-      image: '/certs/lake-claud.png',
-      accent: 'cyan',
-    },
+    // {
+    //   title: 'Create a Secure Data Lake on Cloud Storage',
+    //   issuer: 'Google Cloud',
+    //   image: './certs/lake-claud.png',
+    //   accent: 'cyan',
+    // },
     {
       title: 'Postman API Fundamentals Student Expert',
       issuer: 'Postman',
-      image: '/certs/postman-api.png',
+      image: './certs/postman-api.png',
       accent: 'amber',
     },
     {
       title: 'Claude-101: Foundations of AI Safety',
       issuer: 'Claude AI',
-      image: '/certs/claude-101.png',
+      image: './certs/claude-101.png',
       accent: 'emerald',
     },
     {
       title: 'Git & GitHub Bootcamp',
       issuer: 'LetsUpgrade',
-      image: '/certs/git-github.png',
+      image: './certs/git-github.png',
       accent: 'violet',
     },
     {
       title: 'SQL Bootcamp',
       issuer: 'LetsUpgrade',
-      image: '/certs/sql-bootcamp.png',
+      image: './certs/sql-bootcamp.png',
       accent: 'cyan',
+    },
+     {
+      title: 'Learn C++ Programming - Beginner to Advance',
+      issuer: 'Udemy',
+      image: './certs/c-cpp-advanced.jpg',
+      accent: 'amber',
     },
     {
       title: 'TinyML1: Fundamentals of TinyML',
       issuer: 'HarvardX',
-      image: '/certs/TinyML.png',
+      image: './certs/TinyML.png',
       accent: 'emerald',
     },
-    {
-      title: 'Learn C++ Programming - Beginner to Advance',
-      issuer: 'Udemy',
-      image: '/certs/c-cpp-advanced.jpg',
-      accent: 'amber',
-    },
+   
   ];
 
   useEffect(() => {
