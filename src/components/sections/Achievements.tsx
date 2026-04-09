@@ -1,49 +1,48 @@
-import { motion } from 'framer-motion';
-import { useRef, useState } from 'react';
-import { SectionHeading } from '../ui/SectionHeading';
+// import { motion } from 'framer-motion';
+// import { useRef, useState } from 'react';
+// import { SectionHeading } from '../ui/SectionHeading';
 
 export function Achievements() {
-  const ref = useRef(null);
-  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
-  const textPrimary = { color: 'var(--text-primary, rgba(248, 250, 252, 0.82))' };
-  const textStrong = { color: 'var(--text-strong, #f8fafc)' };
+  // const ref = useRef(null);
+  // const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+  // const textPrimary = { color: 'var(--text-primary, rgba(248, 250, 252, 0.82))' };
+  // const textStrong = { color: 'var(--text-strong, #f8fafc)' };
 
-  const achievements = [
-    {
-      title: 'Java Development Internship',
-      org: 'Kiran Academy (Java By Kiran)',
-      year: '2025',
-      description: 'Completed comprehensive Java development training with focus on OOP, DSA, and backend logic.',
-    },
-    {
-      title: 'Secure Data Lake on Cloud Storage',
-      org: 'Google Cloud',
-      year: '2024',
-      description: 'Earned skill badge by completing hands-on project building secure data lake architecture on GCP.',
-    },
-    {
-      title: 'Postman API Fundamentals Expert',
-      org: 'Postman',
-      year: '2024',
-      description: 'Student expert certification for API fundamentals and comprehensive API testing knowledge.',
-    },
-  ];
+  // const achievements = [
+  //   {
+  //     title: 'Java Development Internship',
+  //     org: 'Kiran Academy (Java By Kiran)',
+  //     year: '2025',
+  //     description: 'Completed comprehensive Java development training with focus on OOP, DSA, and backend logic.',
+  //   },
+  //   {
+  //     title: 'Secure Data Lake on Cloud Storage',
+  //     org: 'Google Cloud',
+  //     year: '2024',
+  //     description: 'Earned skill badge by completing hands-on project building secure data lake architecture on GCP.',
+  //   },
+  //   {
+  //     title: 'Postman API Fundamentals Expert',
+  //     org: 'Postman',
+  //     year: '2024',
+  //     description: 'Student expert certification for API fundamentals and comprehensive API testing knowledge.',
+  //   },
+  // ];
 
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    const rect = e.currentTarget.getBoundingClientRect();
-    setMousePos({
-      x: e.clientX - rect.left,
-      y: e.clientY - rect.top,
-    });
-  };
+  // const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+  //   const rect = e.currentTarget.getBoundingClientRect();
+  //   setMousePos({
+  //     x: e.clientX - rect.left,
+  //     y: e.clientY - rect.top,
+  //   });
+  // };
 
   return (
-    <section ref={ref} id="achievements" className="relative overflow-hidden px-4 py-20 md:px-8 md:py-28">
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_16%_18%,rgba(59,130,246,0.14),transparent_40%),radial-gradient(circle_at_82%_14%,rgba(255,109,0,0.14),transparent_38%)]" />
-      <div className="container-lg relative mx-auto">
+    <section  id="achievements" className="relative overflow-hidden px-4 py-20 md:px-8 md:py-28">
+     {/* <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_16%_18%,rgba(59,130,246,0.14),transparent_40%),radial-gradient(circle_at_82%_14%,rgba(255,109,0,0.14),transparent_38%)]" />
+       <div className="container-lg relative mx-auto">
         <SectionHeading index="08" title="Achievements" className="mb-14" />
 
-        {/* Impact strip */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -70,7 +69,6 @@ export function Achievements() {
           </div>
         </motion.div>
 
-        {/* Trophy cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
           {achievements.map((achievement, idx) => (
             <motion.div
@@ -83,7 +81,6 @@ export function Achievements() {
               className="group cursor-default"
             >
               <div className="relative h-full overflow-hidden rounded-2xl border border-cyan/20 bg-slate-900/45 p-8 backdrop-blur-xl transition-all duration-300 hover:border-violet/55 hover:shadow-[0_22px_62px_rgba(0,0,0,0.5),0_0_22px_rgba(255,109,0,0.18)] md:p-10">
-                {/* Spotlight effect */}
                 <motion.div
                   className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity"
                   style={{
@@ -94,7 +91,6 @@ export function Achievements() {
                 <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_14%_16%,rgba(59,130,246,0.16),transparent_36%),radial-gradient(circle_at_86%_12%,rgba(255,109,0,0.12),transparent_34%)] opacity-75" />
 
                 <div className="relative z-10 flex flex-col items-center text-center space-y-4 h-full">
-                  {/* Trophy Icon */}
                   <motion.div
                     whileHover={{ scale: 1.1 }}
                     className="text-5xl"
@@ -102,18 +98,14 @@ export function Achievements() {
                     🏆
                   </motion.div>
 
-                  {/* Title */}
                   <h3 className="text-lg md:text-xl font-bold text-text leading-tight">
                     <span className="about-typography-title" style={textStrong}>{achievement.title}</span>
                   </h3>
 
-                  {/* Organization */}
                   <p className="about-typography-copy text-sm text-cyan" style={textPrimary}>{achievement.org}</p>
 
-                  {/* Year */}
                   <p className="about-typography-eyebrow text-[10px] text-cyan">{achievement.year}</p>
 
-                  {/* Description */}
                   <p className="about-typography-copy text-sm leading-relaxed flex-grow" style={textPrimary}>
                     {achievement.description}
                   </p>
@@ -122,7 +114,7 @@ export function Achievements() {
             </motion.div>
           ))}
         </div>
-      </div>
+      </div> */}
     </section>
   );
 }

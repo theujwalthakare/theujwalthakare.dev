@@ -23,6 +23,7 @@ type ProjectItem = {
     github: string;
     demo: string;
   };
+  status?: 'In development' | 'Live' | 'Archived';
 };
 
 const PROJECTS: ProjectItem[] = [
@@ -42,9 +43,10 @@ const PROJECTS: ProjectItem[] = [
     coreTint: 'blue',
     image: '/images/cybershield.jfif',
     links: {
-      github: 'https://github.com/theujwalthakare',
+      github: 'https://github.com/theujwalthakare/CyberShield',
       demo: 'https://theujwalthakare.dev',
     },
+    status : 'In development',
   },
   {
     title: 'Digital Immune System (DIS)',
@@ -62,9 +64,10 @@ const PROJECTS: ProjectItem[] = [
     coreTint: 'emerald',
     image: '/images/DIS.jfif',
     links: {
-      github: 'https://github.com/theujwalthakare',
-      demo: 'https://theujwalthakare.dev',
+      github: 'https://github.com/theujwalthakare/DIS',
+      demo: 'https://theujwalthakare.dev/DIS',
     },
+    status: 'Live',
   },
   {
     title: 'ARJUNA',
@@ -82,9 +85,10 @@ const PROJECTS: ProjectItem[] = [
     coreTint: 'slate',
     image: '/images/arjuna.jfif',
     links: {
-      github: 'https://github.com/theujwalthakare',
+      github: 'https://github.com/theujwalthakare/ARJUNA',
       demo: 'https://theujwalthakare.dev',
     },
+    status: 'In development',
   },
   {
     title: 'Build2Show',
@@ -102,9 +106,30 @@ const PROJECTS: ProjectItem[] = [
     coreTint: 'amber',
     image: '/images/build2show.jfif',
     links: {
-      github: 'https://github.com/theujwalthakare',
-      demo: 'https://theujwalthakare.dev',
+      github: 'https://github.com/theujwalthakare/portfolio-hub',
+      demo: 'https://build2show.vercel.app',
     },
+    status : 'Live',
+  },
+  {
+    title: 'TechnoHack 2026',
+    description:
+      'A 2-day hackathon platform bringing together 200+ developers, creators, and students to turn ideas into impact through competitive challenges, real-world projects, and skill-building competitions.',
+    purpose:
+      'Built to organize and showcase a premier tech fest with event management, registration system, and competition tracking for aspiring innovators.',
+    details: [
+      '10 featured competitions including SQL Murder Mystery, WebSprint, CampusPreneurs, and BGMI Battle.',
+      'Real-time event scheduling with venue details and participant management across 2-day hackathon cycle.',
+    ],
+    stack: ['React', 'Next.js', 'Node.js', 'MongoDB', 'Tailwind CSS'],
+    accent: 'cyan',
+    coreTint: 'amber',
+    image: '/images/technohack.jfif',
+    links: {
+      github: 'https://github.com/theujwalthakare/technohack0.1',
+      demo: 'https://technohack0-1.vercel.app',
+    },
+    status: 'Live',
   },
 ];
 
@@ -285,6 +310,7 @@ const Projects = () => {
               <section className="project-modal-section">
                 <h4>Tech Stack</h4>
                 <p>{selectedProject.stack.join(' • ')}</p>
+
               </section>
 
               <section className="project-modal-actions">
@@ -294,7 +320,12 @@ const Projects = () => {
                 <a href={selectedProject.links.demo} target="_blank" rel="noreferrer" className="project-modal-action">
                   <FaArrowUpRightFromSquare /> Demo
                 </a>
+                {/* show status in beutifull UI */}
+                <span className={`project-status project-status--${selectedProject.status === 'Live' ? 'live' : selectedProject.status === 'In development' ? 'dev' : 'archived'}`}>
+                  {selectedProject.status}
+                </span>
               </section>
+               
             </div>
             </motion.div>
           </motion.div>

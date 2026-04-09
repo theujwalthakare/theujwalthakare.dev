@@ -106,6 +106,12 @@ export function Certifications() {
       image: './certs/sql-bootcamp.png',
       accent: 'cyan',
     },
+    {
+      title:'Bypass CTF Challenge',
+      issuer: 'Army Institute of Technology Pune, Maharashtra',
+      image: './certs/bypass-ctf.png',
+      accent: 'violet',
+    },
      {
       title: 'Learn C++ Programming - Beginner to Advance',
       issuer: 'Udemy',

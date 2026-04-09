@@ -165,7 +165,7 @@ const LanguageRow = ({ language, count, share }: LanguageRowProps) => (
     <div className={`mt-3 h-2 overflow-hidden rounded-full ${theme.languageTrack}`}>
       <div
         className={`h-full rounded-full ${theme.languageBar}`}
-        style={{ width: `${Math.max(8, share)}%` }}
+        style={{ width: `${Math.max(9, share)}%` }}
       />
     </div>
     <p className={`mt-2 text-xs ${theme.languageMeta}`}>{count} repositories</p>
@@ -254,7 +254,7 @@ export function GitHubStats() {
   const profile = summary?.profile;
   const avatarUrl = profile?.avatar_url || `https://github.com/${GITHUB_USERNAME}.png`;
   const displayName = profile?.name?.trim() || 'Ujwal Thakare';
-  const bio = profile?.bio?.trim() || 'Learning and building better software. Open-source enthusiast and endlessly curious builder.';
+  const bio = profile?.bio?.trim() || 'Building real-world projects with modern tech 💻 Full-stack development | Cybersecurity | Problem solving Focused on performance, security, and meaningful user experiences. Open to internships, collaborations and projects.';
   const location = profile?.location?.trim();
   const website = profile?.blog?.trim() || profile?.html_url || `https://github.com/${GITHUB_USERNAME}`;
   const websiteLabel = profile?.blog?.trim() || 'GitHub profile';
@@ -342,14 +342,14 @@ export function GitHubStats() {
             href={website}
             target="_blank"
             rel="noreferrer"
-            className="inline-flex items-center gap-2 rounded-full border border-cyan/20 bg-[#11182a] px-3 py-1.5 text-xs text-[var(--text-strong)] transition hover:border-cyan/40 hover:text-cyan md:text-sm"
+            className="inline-flex items-center gap-2 rounded-full border border-cyan/20 bg-[#11182a] px-3 py-1.5 text-xs text-[#075ee8] transition hover:border-cyan/40 hover:text-cyan md:text-sm"
           >
             <FaGlobe size={12} />
             {websiteLabel}
           </a>
 
           {location ? (
-            <span className="inline-flex items-center gap-2 rounded-full border border-cyan/20 bg-[#11182a] px-3 py-1.5 text-xs text-[var(--text-strong)] md:text-sm">
+            <span className="inline-flex items-center gap-2 rounded-full border border-cyan/20 bg-[#11182a] px-3 py-1.5 text-xs text-[#ffffff] md:text-sm">
               <FaLocationDot size={12} className="text-cyan" />
               {location}
             </span>

@@ -32,15 +32,15 @@ const Overlay = ({ scrollYProgress }: OverlayProps) => {
         className="absolute inset-0 flex items-center justify-center px-6 py-12"
       >
         <div className="w-full max-w-3xl text-center">
-          <motion.p className="mb-6 text-xs font-mono uppercase tracking-[0.35em] text-cyan-200/70 md:text-sm">
+          <motion.p className="mb-6 text-xs font-mono uppercase tracking-[0.35em] text-[#ffffff] md:text-sm">
             // Introduction
           </motion.p>
-          <motion.h1 className="text-balance text-4xl font-black leading-tight text-[var(--text-strong)] md:text-6xl lg:text-7xl">
+          <motion.h1 className="text-balance text-4xl font-black leading-tight text-[#ffffff] md:text-6xl lg:text-7xl">
            Ujwal Thakare
             <br />
             Creative Engineer.
           </motion.h1>
-          <motion.p className="mt-6 text-sm leading-relaxed text-[var(--text-soft)] md:text-base">
+          <motion.p className="mt-6 text-sm leading-relaxed text-[#ffffff] md:text-base">
             Crafting digital experiences that captivate and inspire.
           </motion.p>
         </div>
@@ -56,15 +56,15 @@ const Overlay = ({ scrollYProgress }: OverlayProps) => {
         className="absolute left-0 top-1/3 w-full px-6 md:px-20"
       >
         <div className="max-w-2xl text-left">
-          <motion.p className="mb-4 text-xs font-mono uppercase tracking-[0.35em] text-violet-300/70 md:text-sm">
+          <motion.p className="mb-4 text-xs font-mono uppercase tracking-[0.35em] text-[#ffffff] md:text-sm">
             // Craft
           </motion.p>
-          <motion.h2 className="text-balance text-3xl font-bold leading-tight text-[var(--text-strong)] md:text-5xl">
+          <motion.h2 className="text-balance text-3xl font-bold leading-tight text-[#ffffff] md:text-5xl">
             I build digital
             <br />
             experiences.
           </motion.h2>
-          <motion.p className="mt-4 max-w-xl text-sm leading-relaxed text-[var(--text-soft)] md:text-base">
+          <motion.p className="mt-4 max-w-xl text-sm leading-relaxed text-[#ffffff] md:text-base">
             From concept to code, every pixel is intentional.
           </motion.p>
         </div>
@@ -80,15 +80,15 @@ const Overlay = ({ scrollYProgress }: OverlayProps) => {
         className="absolute right-0 top-2/3 w-full px-6 md:px-20"
       >
         <div className="ml-auto max-w-2xl text-right">
-          <motion.p className="mb-4 text-xs font-mono uppercase tracking-[0.35em] text-amber-300/70 md:text-sm">
+          <motion.p className="mb-4 text-xs font-mono uppercase tracking-[0.35em] text-[#ffffff] md:text-sm">
             // Systems
           </motion.p>
-          <motion.h2 className="text-balance text-3xl font-bold leading-tight text-[var(--text-strong)] md:text-5xl">
+          <motion.h2 className="text-balance text-3xl font-bold leading-tight text-[#ffffff] md:text-5xl">
             Bridging design
             <br />
             and engineering.
           </motion.h2>
-          <motion.p className="mt-4 max-w-xl text-sm leading-relaxed text-[var(--text-soft)] md:text-base">
+          <motion.p className="mt-4 max-w-xl text-sm leading-relaxed text-[#ffffff] md:text-base">
             Performance meets aesthetics in every project.
           </motion.p>
         </div>

@@ -14,7 +14,7 @@ const About = () => {
             <h2 className="text-3xl md:text-3xl font-dystopian" style={textStrong}>
             <DecryptedText text="Who I Am" speed={60} />
           </h2>
-          <p className="mx-auto max-w-2xl text-sm" style={textPrimary}>
+          <p className="mx-auto max-w-4xl text-lg" style={textPrimary}>
             A security-conscious full-stack developer blending product sense with systems thinking. I love shipping polished interfaces,
             reliable APIs, and resilient infra while keeping a curious eye on emerging tech.
           </p>
@@ -29,10 +29,10 @@ const About = () => {
                  
               </div>
 
-              <div className="grid grid-cols-2 gap-2 text-sm">
+              <div className="grid grid-cols-2 gap-2 text-md">
                 {[
                   { label: 'Based in', value: 'Nashik, India' },
-                  { label: 'Availability', value: 'Open to Remote' },
+                  { label: 'Availability', value: 'Open to Work' },
                   { label: 'Focus', value: 'Full Stack, CyDevOps' },
                   { label: 'Interests', value: 'AI/ML, Cyber Security' },
                 ].map((item) => (
@@ -48,7 +48,8 @@ const About = () => {
               </div>
 
               <div className="flex flex-wrap gap-2 text-[11px] uppercase tracking-[0.14em] text-cyber-blue">
-                {['TypeScript', 'React', 'Node.js', 'Python', 'PostgreSQL', 'MongoDB', 'Tailwind', 'OWASP']
+                {/* label as tech stack */}
+                {['TypeScript', 'React', 'Node.js','JAVA', 'Python', 'PostgreSQL', 'MySQL', 'Tailwind', 'OWASP']
                   .map((pill) => (
                     <span
                       key={pill}
@@ -64,7 +65,7 @@ const About = () => {
           <div className="space-y-5">
             <div className="rounded-xl p-5" style={panelSurface}>
               <h3 className="text-lg font-cyber text-cyber-blue mb-3">What I do</h3>
-              <p className="leading-relaxed" style={textPrimary}>
+              <p className="leading-relaxed text-md" style={textPrimary}>
                 I design and build full-stack experiences—clean UI, accessible flows, and dependable APIs. I care about performance,
                 security-by-default, and developer ergonomics. On the back-end, I focus on well-modeled data, observability, and sensible automation.
               </p>
@@ -72,10 +73,11 @@ const About = () => {
 
             <div className="rounded-xl p-5" style={panelSurface}>
               <h3 className="text-lg font-cyber text-cyber-blue mb-4">Recent highlights</h3>
-              <ul className="space-y-3 text-sm" style={textPrimary}>
-                <li className="flex gap-3"><span className="mt-1 h-1.5 w-1.5 rounded-full bg-cyber-blue" />Built AI-assisted portfolio interactions and hardened them with graceful fallbacks for speech APIs.</li>
-                <li className="flex gap-3"><span className="mt-1 h-1.5 w-1.5 rounded-full bg-cyber-blue" />Shipped dashboards and full-stack mini-projects with Python, React, and secure API gateways.</li>
-                <li className="flex gap-3"><span className="mt-1 h-1.5 w-1.5 rounded-full bg-cyber-blue" />Practiced threat-aware development using OWASP drills, auth hardening, and code review checklists.</li>
+              <ul className="space-y-3 text-md  justify-content align-items" style={textPrimary}>
+                <li className="flex gap-3"><span className="mt-1 h-1.5 w-1.5 rounded-full bg-cyan" /><strong>DIS</strong> — Kubernetes security overlay with anomaly detection (AUPRC 0.9813, 28ms latency).</li>
+                <li className="flex gap-3"><span className="mt-1 h-1.5 w-1.5 rounded-full bg-violet" /><strong>ARJUNA</strong> — Observability engine with causal intelligence and incident memory (Java Spring Boot + Python).</li>
+                <li className="flex gap-3"><span className="mt-1 h-1.5 w-1.5 rounded-full bg-emerald" /><strong>CyberShield</strong> — AI cybercrime platform with NLP classification (82–89% accuracy) and deepfake detection.</li>
+                <li className="flex gap-3"><span className="mt-1 h-1.5 w-1.5 rounded-full bg-cyan" /><strong>build2show</strong> — Placement platform with AI resume builder, mock interviews, and adaptive assessments.</li>
               </ul>
             </div>
 

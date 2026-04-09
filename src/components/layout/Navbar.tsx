@@ -71,7 +71,7 @@ const Navbar = () => {
       <div className="mx-auto flex max-w-7xl select-none items-center justify-between px-4 py-4 md:px-8">
         <h2
           onClick={() => navigate('/')}
-          className="cursor-pointer font-headline text-2xl font-bold text-[var(--text)] transition hover:text-cyan"
+          className="cursor-pointer font-headline text-2xl font-bold text-[#ffffff] transition hover:text-cyan"
         >
           Ujwal Thakare
         </h2>
@@ -81,7 +81,7 @@ const Navbar = () => {
             <button
               key={item.hash}
               onClick={() => handleSectionClick(item.hash)}
-              className="font-mono text-xs uppercase tracking-[0.2em] text-[var(--muted)] transition hover:text-cyan"
+              className="font-mono text-xs uppercase tracking-[0.2em] text-[#ffffff] transition hover:text-cyan"
             >
               {item.name}
             </button>
