@@ -73,4 +73,22 @@ CNAME.bak
 private.key
 sd-dystopian-font
 theujwalthakare.dev
-src
+
+# Explicit sensitive cert/key files
+ca_bundle.crt
+certificate.crt
+MYCSR.csr
+private.key
+
+# Main site content (ignored for public repo)
+sd-dystopian-font/
+
+# Build/output and dependencies
+dist/
+node_modules/
+
+# Domain config backups
+CNAME
+CNAME.bak
+ 
+
