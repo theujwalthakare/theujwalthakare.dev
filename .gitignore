@@ -48,7 +48,7 @@ MYCSR.csr
 *.pub
 
 # Local cert folders (keep only non-sensitive placeholders if needed)
-public/certs/**
+
 !public/certs/.gitkeep
 
 # Test, coverage, cache, and build metadata
