@@ -2,4 +2,37 @@ node_modules
 dist
 build
 coverage
+.early.coverage
 .env
+.env.*
+*.local
+
+# Local editor and OS files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Private keys and certificate material
+*.key
+*.crt
+*.csr
+*.pem
+*.p12
+*.pfx
+*.der
+*.cer
+private.key
+ca_bundle.crt
+certificate.crt
+MYCSR.csr
+
+# Logs and diagnostics
+*.log
+*.log.*
+vite.config.ts
+
+sd-dystopian-font
+.github/
+
+
