@@ -88,7 +88,7 @@ const Navbar = () => {
           ))}
 
           <a
-            href="/cv.pdf"
+            href="/resume.pdf"
             target="_blank"
             rel="noreferrer noopener"
             className="inline-flex items-center gap-2 rounded-full border border-cyan/30 bg-cyan/10 px-4 py-2 font-mono text-xs uppercase tracking-[0.2em] text-cyan transition hover:border-cyan/60 hover:bg-cyan/20"
@@ -147,7 +147,7 @@ const Navbar = () => {
             ))}
 
             <a
-              href="/cv.pdf"
+              href="/resume.pdf"
               target="_blank"
               rel="noreferrer noopener"
               className="inline-flex items-center justify-center gap-2 rounded-lg border border-cyan/30 bg-cyan/10 px-3 py-2 font-mono text-xs uppercase tracking-[0.2em] text-cyan transition hover:border-cyan/60 hover:bg-cyan/20"
