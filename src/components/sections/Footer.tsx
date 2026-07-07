@@ -25,12 +25,12 @@ export function Footer() {
     },
     {
       icon: FaLinkedin,
-      href: 'https://www.linkedin.com/in/ujwal-thakare-300b25264?lipi=urn%3Ali%3Apage%3Ad_UNKNOWN_ROUTE_profile-edit.topcard%3BGDW%2FpwDpSEWzf7Sak0A6JQ%3D%3D',
+      href: 'https://www.linkedin.com/in/theujwalthakare',
       label: 'LinkedIn',
     },
     {
       icon: FaEnvelope,
-      href: 'mailto:thakare2829@gmail.com',
+      href: 'mailto:theujwalthakare@gmail.com',
       label: 'Email',
     },
     {

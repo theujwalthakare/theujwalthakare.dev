@@ -118,12 +118,7 @@ export function Certifications() {
       image: './certs/c-cpp-advanced.jpg',
       accent: 'amber',
     },
-    {
-      title: 'TinyML1: Fundamentals of TinyML',
-      issuer: 'HarvardX',
-      image: './certs/TinyML.png',
-      accent: 'emerald',
-    },
+    
    
   ];
 

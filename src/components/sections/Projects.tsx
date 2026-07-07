@@ -38,7 +38,7 @@ const PROJECTS: ProjectItem[] = [
       'Threat pattern analysis layer powered by search and intelligence APIs.',
       'Actionable guidance generation for remediation and response workflows.',
     ],
-    stack: ['Python', 'Django', 'Elasticsearch', 'Threat Intelligence APIs', 'NLP', 'React'],
+    stack: ['Python', 'Supabase(PostgreSQL)','Gemini API', 'Next.js', 'Threat Intelligence APIs', 'NLP', 'React'],
     accent: 'cyan',
     coreTint: 'blue',
     image: '/images/cybershield.jfif',
@@ -59,7 +59,7 @@ const PROJECTS: ProjectItem[] = [
       'Service mesh telemetry and policy-aware behavior using Istio.',
       'Automated mitigation strategies for failure prevention and recovery.',
     ],
-    stack: ['Kubernetes', 'Golang', 'Prometheus', 'Grafana', 'Istio', 'AI/ML'],
+    stack: ['Kubernetes', 'docker', 'Prometheus', 'Python', 'Istio', 'AI/ML'],
     accent: 'violet',
     coreTint: 'emerald',
     image: '/images/DIS.jfif',
@@ -67,29 +67,51 @@ const PROJECTS: ProjectItem[] = [
       github: 'https://github.com/theujwalthakare/DIS',
       demo: 'https://theujwalthakare.dev/DIS',
     },
-    status: 'Live',
+    status: 'In development',
   },
   {
-    title: 'ARJUNA',
+    title: 'Multi-OS Security Testing HomeLab',
     description:
-      'Autonomous Runtime Judgment Unified Network Analyzer that monitors network activity, detects intrusions, and performs intelligent decision-making using AI-powered analysis and real-time telemetry.',
+      'A multi-node virtual homelab for security testing and network analysis across Ubuntu Server, Kali Linux, and Windows endpoints inside a segregated VMware workstation environment.',
     purpose:
-      'Built to improve intrusion detection speed and decision quality with an autonomous network analysis pipeline.',
+      'Built to practice offensive and defensive security workflows in an isolated lab while strengthening networking and endpoint administration fundamentals.',
     details: [
-      'Real-time telemetry ingestion and event correlation engine.',
-      'AI-assisted alert prioritization for faster response.',
-      'Integrated detection workflows with monitoring and dashboard tools.',
+      'Configured Ubuntu Server, Kali Linux, and Windows nodes inside a secure virtual workstation host.',
+      'Simulated vulnerability scans, exploitation paths, and credential attacks from an adversarial Kali Linux node.',
+      'Analyzed segmented packet flow across TCP/IP, DNS, HTTP/HTTPS, and SSH routing paths.',
+      'Performed firewall tuning, system administration, and endpoint log review to compare attack and defense behavior.',
     ],
-    stack: ['Node.js', 'AI/ML', 'Snort', 'Grafana', 'WebSockets', 'MongoDB'],
+    stack: ['Ubuntu Server', 'Kali Linux', 'Windows', 'VMware Workstation', 'Networking Fundamentals'],
     accent: 'cyan',
     coreTint: 'slate',
     image: '/images/arjuna.jfif',
     links: {
-      github: 'https://github.com/theujwalthakare/ARJUNA',
+      github: 'https://github.com/theujwalthakare',
       demo: 'https://theujwalthakare.dev',
     },
-    status: 'In development',
+    status: 'Archived',
   },
+  // {
+  //   title: 'ARJUNA',
+  //   description:
+  //     'Autonomous Runtime Judgment Unified Network Analyzer that monitors network activity, detects intrusions, and performs intelligent decision-making using AI-powered analysis and real-time telemetry.',
+  //   purpose:
+  //     'Built to improve intrusion detection speed and decision quality with an autonomous network analysis pipeline.',
+  //   details: [
+  //     'Real-time telemetry ingestion and event correlation engine.',
+  //     'AI-assisted alert prioritization for faster response.',
+  //     'Integrated detection workflows with monitoring and dashboard tools.',
+  //   ],
+  //   stack: ['Node.js', 'AI/ML', 'Snort', 'Grafana', 'WebSockets', 'MongoDB'],
+  //   accent: 'cyan',
+  //   coreTint: 'slate',
+  //   image: '/images/arjuna.jfif',
+  //   links: {
+  //     github: 'https://github.com/theujwalthakare/ARJUNA',
+  //     demo: 'https://theujwalthakare.dev',
+  //   },
+  //   status: 'In development',
+  // },
   {
     title: 'Build2Show',
     description:
@@ -101,7 +123,7 @@ const PROJECTS: ProjectItem[] = [
       'Progress tracking and learning-path guidance for preparation cycles.',
       'Interview readiness tools and curated preparation modules.',
     ],
-    stack: ['React', 'Firebase', 'Node.js', 'MongoDB', 'Tailwind CSS'],
+    stack: ['React', 'Supabase','Clerk', 'Node.js', 'PostgreSQL', 'Tailwind CSS'],
     accent: 'violet',
     coreTint: 'amber',
     image: '/images/build2show.jfif',
@@ -131,11 +153,13 @@ const PROJECTS: ProjectItem[] = [
     },
     status: 'Live',
   },
+
 ];
 
 const iconFor = (title: string) => {
   if (title.includes('CyberShield')) return FaShieldHalved;
   if (title.includes('Digital Immune') || title.includes('DIS')) return FaCloud;
+  if (title.includes('HomeLab') || title.includes('Homelab')) return FaServer;
   if (title.includes('ARJUNA')) return FaServer;
   if (title.includes('Build2Show')) return FaCode;
   return FaCode;
@@ -184,6 +208,7 @@ const Projects = () => {
                 key={project.title}
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
+                whileTap={{ scale: 0.98, y: 2 }}
                 transition={{ duration: 0.6, delay: index * 0.08 }}
                 viewport={{ once: true, margin: '-100px' }}
                 className="project-parent"

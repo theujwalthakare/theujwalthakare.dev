@@ -1,9 +1,20 @@
+import { useEffect, useState } from "react";
 import DecryptedText from "../ui/DecryptedText";
 
 const About = () => {
   const panelSurface = { background: 'var(--panel-bg)', border: '1px solid var(--panel-border)', boxShadow: 'var(--panel-glow)' };
   const textPrimary = { color: 'var(--text-primary)' };
   const textStrong = { color: 'var(--text-strong)' };
+  const headlinePhrases = ['Who I Am', 'Computer Science Student', 'Cyber Security Enthusiast'];
+  const [headlineIndex, setHeadlineIndex] = useState(0);
+
+  useEffect(() => {
+    const rotation = window.setInterval(() => {
+      setHeadlineIndex((currentIndex) => (currentIndex +1) % headlinePhrases.length);
+    }, 6600);
+
+    return () => window.clearInterval(rotation);
+  }, []);
 
   return (
     <section id="about" className="relative overflow-hidden py-20" style={{ backgroundColor: 'var(--bg-body)' }}>
@@ -12,7 +23,8 @@ const About = () => {
       <div className="container relative mx-auto px-4">
         <div className="mb-12 text-center space-y-3">
             <h2 className="text-3xl md:text-3xl font-dystopian" style={textStrong}>
-            <DecryptedText text="Who I Am" speed={60} />
+              {/* I want this text is changes in between Who I am => Computer Science Student => Cyber Security Enthusiast => */}
+            <DecryptedText key={headlinePhrases[headlineIndex]} text={headlinePhrases[headlineIndex]} speed={60} />
           </h2>
           <p className="mx-auto max-w-4xl text-lg" style={textPrimary}>
             A security-conscious full-stack developer blending product sense with systems thinking. I love shipping polished interfaces,
@@ -33,7 +45,7 @@ const About = () => {
                 {[
                   { label: 'Based in', value: 'Nashik, India' },
                   { label: 'Availability', value: 'Open to Work' },
-                  { label: 'Focus', value: 'Full Stack, CyDevOps' },
+                  { label: 'Focus', value: 'Full Stack, SecDevOps' },
                   { label: 'Interests', value: 'AI/ML, Cyber Security' },
                 ].map((item) => (
                   <div
@@ -75,7 +87,7 @@ const About = () => {
               <h3 className="text-lg font-cyber text-cyber-blue mb-4">Recent highlights</h3>
               <ul className="space-y-3 text-md  justify-content align-items" style={textPrimary}>
                 <li className="flex gap-3"><span className="mt-1 h-1.5 w-1.5 rounded-full bg-cyan" /><strong>DIS</strong> — Kubernetes security overlay with anomaly detection (AUPRC 0.9813, 28ms latency).</li>
-                <li className="flex gap-3"><span className="mt-1 h-1.5 w-1.5 rounded-full bg-violet" /><strong>ARJUNA</strong> — Observability engine with causal intelligence and incident memory (Java Spring Boot + Python).</li>
+                
                 <li className="flex gap-3"><span className="mt-1 h-1.5 w-1.5 rounded-full bg-emerald" /><strong>CyberShield</strong> — AI cybercrime platform with NLP classification (82–89% accuracy) and deepfake detection.</li>
                 <li className="flex gap-3"><span className="mt-1 h-1.5 w-1.5 rounded-full bg-cyan" /><strong>build2show</strong> — Placement platform with AI resume builder, mock interviews, and adaptive assessments.</li>
               </ul>

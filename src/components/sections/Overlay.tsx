@@ -6,9 +6,9 @@ type OverlayProps = {
 
 const Overlay = ({ scrollYProgress }: OverlayProps) => {
   // Section 1: Introduction (0% - 28%)
-  const section1Opacity = useTransform(scrollYProgress, [0, 0.08, 0.25, 0.33], [0, 1, 1, 0]);
-  const section1Y = useTransform(scrollYProgress, [0, 0.25], [60, -60]);
-  const section1Scale = useTransform(scrollYProgress, [0, 0.12, 0.25], [0.95, 1, 0.95]);
+  const section1Opacity = useTransform(scrollYProgress, [0.08, 0.11, 0.25, 0.33], [0, 1, 1, 0]);
+  const section1Y = useTransform(scrollYProgress, [0.08, 0.25], [60, -60]);
+  const section1Scale = useTransform(scrollYProgress, [0.08, 0.12, 0.25], [0.95, 1, 0.95]);
 
   // Section 2: Craft (24% - 55%)
   const section2Opacity = useTransform(scrollYProgress, [0.2, 0.33, 0.52, 0.60], [0, 1, 1, 0]);

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { FaBars, FaMoon, FaSun, FaTimes } from 'react-icons/fa';
+import { FaBars, FaDownload, FaMoon, FaSun, FaTimes } from 'react-icons/fa';
 
 const navItems = [
   { name: 'Home', hash: '#home' },
@@ -87,6 +87,16 @@ const Navbar = () => {
             </button>
           ))}
 
+          <a
+            href="/cv.pdf"
+            target="_blank"
+            rel="noreferrer noopener"
+            className="inline-flex items-center gap-2 rounded-full border border-cyan/30 bg-cyan/10 px-4 py-2 font-mono text-xs uppercase tracking-[0.2em] text-cyan transition hover:border-cyan/60 hover:bg-cyan/20"
+          >
+            <FaDownload size={12} />
+            Resume
+          </a>
+
           <button
             onClick={toggleTheme}
             className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-[var(--nav-border)] bg-[var(--panel-bg)] text-[var(--text)] transition hover:border-cyan/50 hover:text-cyan"
@@ -135,6 +145,16 @@ const Navbar = () => {
                 {item.name}
               </button>
             ))}
+
+            <a
+              href="/cv.pdf"
+              target="_blank"
+              rel="noreferrer noopener"
+              className="inline-flex items-center justify-center gap-2 rounded-lg border border-cyan/30 bg-cyan/10 px-3 py-2 font-mono text-xs uppercase tracking-[0.2em] text-cyan transition hover:border-cyan/60 hover:bg-cyan/20"
+            >
+              <FaDownload size={12} />
+              Download Resume
+            </a>
           </div>
         </div>
       )}

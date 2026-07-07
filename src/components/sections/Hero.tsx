@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { FaGithub, FaLinkedin } from 'react-icons/fa';
+import { FaDownload, FaGithub, FaLinkedin } from 'react-icons/fa';
 
 const Hero = () => {
   return (
@@ -59,6 +59,16 @@ const Hero = () => {
                   title="LinkedIn"
                 >
                   <FaLinkedin className="text-primary-plum hover:text-accent-crimson" />
+                </a>
+                <a
+                  href="/cv.pdf"
+                  target="_blank"
+                  rel="noreferrer noopener"
+                  className="inline-flex items-center justify-center gap-2 rounded-lg border border-primary-plum/20 px-4 text-xs uppercase tracking-widest text-primary-plum transition-all hover:border-accent-crimson hover:bg-accent-crimson/10 hover:text-accent-crimson"
+                  title="Download Resume"
+                >
+                  <FaDownload size={12} />
+                  Resume
                 </a>
               </div>
             </motion.div>
