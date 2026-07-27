@@ -14,15 +14,16 @@ type ExperienceItem = {
 
 const experienceItems: ExperienceItem[] = [
 	{
-		role: 'React Full-Stack Intern',
-		company: 'Aquil Labs',
-		period: 'Current',
+		role: 'IT Support / Network Administration',
+		company: 'Aquil Tech Labs',
+		period: 'May 2026 – Jul 2026',
 		bullets: [
-			'Building security-focused tools and enterprise-level applications with modern React and full-stack workflows.',
-			'Working on data-driven features and structured application flows designed for scalable business use cases.',
-			'Collaborating with the team to ship reliable UI, API, and integration improvements across the product.',
+			'Analyzed web application architectures (React.js, JavaScript, REST APIs) to understand data flows and identify potential attack vectors mapped to the OWASP Top 10.',
+			'Monitored system environments and navigated modern development workflows (Git), gaining visibility into enterprise network topologies and log generation.',
+			'Built a foundational understanding of the cybersecurity threat landscape, studying MITRE ATT&CK techniques (e.g., lateral movement, C2) and regional compliance standards like CERT-In guidelines.',
+			'Engineered a Kubernetes-based Digital Immune System (DIS) research project, focusing on resilient infrastructure, system hardening, and automated threat detection mechanisms.',
 		],
-		stack: ['React', 'Full Stack', 'Security Tools', 'Enterprise Apps', 'Data'],
+		stack: ['Networking', 'Cybersecurity', 'OWASP', 'MITRE ATT&CK', 'Git'],
 	},
 	{
 		role: 'Internship Trainee - Java Development',
